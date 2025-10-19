@@ -24,8 +24,6 @@ class _HomePageState extends State<HomePage> {
   final _controller = Get.put(UserInfoController());
   final _productController = Get.put(ProductController());
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,17 +35,15 @@ class _HomePageState extends State<HomePage> {
           builder: (context) {
             return Padding(
               padding: const EdgeInsets.only(left: 20),
-              child: CircleAvatar(
-
-                backgroundColor: const Color(0xffF5F6FA),
-                child: GestureDetector(
-                  onTap: () {
-                    Scaffold.of(context).openDrawer();
-                  },
+              child: GestureDetector(
+                onTap: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                child: CircleAvatar(
+                  backgroundColor: const Color(0xffF5F6FA),
                   child: SvgPicture.asset(
                     'assets/icons/drawer_icon/drawer_menu.svg',
-                    height: 25,
-                    width: 25,
+                    fit: BoxFit.scaleDown,
                   ),
                 ),
               ),
@@ -57,13 +53,14 @@ class _HomePageState extends State<HomePage> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20),
-            child: CircleAvatar(
-              radius: 22,
-              backgroundColor: const Color(0xffF5F6FA),
-              child: SvgPicture.asset(
-                'assets/icons/bag_icon.svg',
-                height: 25,
-                width: 25,
+            child: GestureDetector(
+              onTap: () {},
+              child: CircleAvatar(
+                backgroundColor: const Color(0xffF5F6FA),
+                child: SvgPicture.asset(
+                  'assets/icons/bag_icon.svg',
+                  fit: BoxFit.scaleDown,
+                ),
               ),
             ),
           ),
@@ -230,7 +227,9 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
                                 ),
-                                onPressed: () {Get.offAllNamed(RoutePages.loginScreen);},
+                                onPressed: () {
+                                  Get.offAllNamed(RoutePages.loginScreen);
+                                },
                                 child: Text(
                                   'Yes, Logout',
                                   style: TextStyle(
@@ -246,7 +245,9 @@ class _HomePageState extends State<HomePage> {
                             Expanded(
                               child: CustomElevationButton(
                                 label: 'Cancel',
-                                onPress: () { Get.back();},
+                                onPress: () {
+                                  Get.back();
+                                },
                               ),
                             ),
                           ],
@@ -255,7 +256,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 );
-
               },
               title: Text(
                 'Logout ',
@@ -278,91 +278,95 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Hello',
-                  style: AppTextStyle.largeHeading,
-                ),
-                Text(
-                  'Welcome to Laza',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xff8F959E),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Hello', style: AppTextStyle.largeHeading),
+                  Text(
+                    'Welcome to Laza',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xff8F959E),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        // controller: controller,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15,
-                          height: 1.1,
-                          color: AppColor.grayColor,
-                        ),
-                        decoration: InputDecoration(
-                          prefixIcon: SvgPicture.asset('assets/icons/search_product.svg',height: 20,width: 20,fit: BoxFit.none,),
-                          hintText: 'Search...',
-                          filled: true,
-                          fillColor: Color(0xFFF5F6FA),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          // controller: controller,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
+                            height: 1.1,
+                            color: AppColor.grayColor,
+                          ),
+                          decoration: InputDecoration(
+                            prefixIcon: SvgPicture.asset(
+                              'assets/icons/search_product.svg',
+                              fit: BoxFit.scaleDown,
+                            ),
+                            hintText: 'Search...',
+                            filled: true,
+                            fillColor: Color(0xFFF5F6FA),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Container(
-                      height: 50,
-                      width: 50,
-                      decoration: BoxDecoration(
+                      const SizedBox(width: 10),
+                      Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
                           color: AppColor.primaryColor,
-                          borderRadius: BorderRadius.circular(10)
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: SvgPicture.asset(
+                          'assets/icons/mice_icon_home.svg',
+                          fit: BoxFit.scaleDown,
+                        ),
                       ),
-                      child: SvgPicture.asset('assets/icons/mice_icon_home.svg',height: 24,width: 24,fit: BoxFit.none,),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 20),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Choose Brand',
-                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500,height: 1.1,color: Color(0xff1D1E20)),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text('View All',style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400,height: 1.1,color: Color(0xff8F959E))),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-            const SizedBox(height: 5),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  BrandLogo(imagePath: 'assets/icons/brand_logo/adidas.svg', label: 'Adidas',),
-                  BrandLogo(imagePath: 'assets/icons/brand_logo/adidas.svg', label: 'Adidas',),
-                  BrandLogo(imagePath: 'assets/icons/brand_logo/adidas.svg', label: 'Adidas',),
-                  BrandLogo(imagePath: 'assets/icons/brand_logo/adidas.svg', label: 'Adidas',),
-                  BrandLogo(imagePath: 'assets/icons/brand_logo/adidas.svg', label: 'Adidas',),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Choose Brand',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500,
+                          height: 1.1,
+                          color: Color(0xff1D1E20),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          'View All',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            height: 1.1,
+                            color: Color(0xff8F959E),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
+            BrandLogo(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -375,11 +379,24 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Text(
                         'New Arrival',
-                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500,height: 1.1,color: Color(0xff1D1E20)),
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500,
+                          height: 1.1,
+                          color: Color(0xff1D1E20),
+                        ),
                       ),
                       TextButton(
                         onPressed: () {},
-                        child: Text('View All',style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400,height: 1.1,color: Color(0xff8F959E))),
+                        child: Text(
+                          'View All',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            height: 1.1,
+                            color: Color(0xff8F959E),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -406,8 +423,6 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-
-
     );
   }
 }
