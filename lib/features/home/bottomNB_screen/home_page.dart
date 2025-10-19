@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
             return Padding(
               padding: const EdgeInsets.only(left: 20),
               child: CircleAvatar(
-                radius: 22,
+
                 backgroundColor: const Color(0xffF5F6FA),
                 child: GestureDetector(
                   onTap: () {
@@ -274,123 +274,136 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Hello',
-                style: AppTextStyle.largeHeading,
-              ),
-              Text(
-                'Welcome to Laza',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xff8F959E),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hello',
+                  style: AppTextStyle.largeHeading,
                 ),
-              ),
-              const SizedBox(height: 20),
+                Text(
+                  'Welcome to Laza',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xff8F959E),
+                  ),
+                ),
+                const SizedBox(height: 20),
 
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      // controller: controller,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                        height: 1.1,
-                        color: AppColor.grayColor,
-                      ),
-                      decoration: InputDecoration(
-                        prefixIcon: SvgPicture.asset('assets/icons/search_product.svg',height: 20,width: 20,fit: BoxFit.none,),
-                        hintText: 'Search...',
-                        filled: true,
-                        fillColor: Color(0xFFF5F6FA),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        // controller: controller,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 15,
+                          height: 1.1,
+                          color: AppColor.grayColor,
+                        ),
+                        decoration: InputDecoration(
+                          prefixIcon: SvgPicture.asset('assets/icons/search_product.svg',height: 20,width: 20,fit: BoxFit.none,),
+                          hintText: 'Search...',
+                          filled: true,
+                          fillColor: Color(0xFFF5F6FA),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      color: AppColor.primaryColor,
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                    child: SvgPicture.asset('assets/icons/mice_icon_home.svg',height: 24,width: 24,fit: BoxFit.none,),
-                  )
-                ],
-              ),
-              const SizedBox(height: 20),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Choose Brand',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500,height: 1.1,color: Color(0xff1D1E20)),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text('View All',style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400,height: 1.1,color: Color(0xff8F959E))),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 5),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    BrandLogo(imagePath: 'assets/icons/brand_logo/adidas.svg', label: 'Adidas',),
-                    BrandLogo(imagePath: 'assets/icons/brand_logo/adidas.svg', label: 'Adidas',),
-                    BrandLogo(imagePath: 'assets/icons/brand_logo/adidas.svg', label: 'Adidas',),
-                    BrandLogo(imagePath: 'assets/icons/brand_logo/adidas.svg', label: 'Adidas',),
-                    BrandLogo(imagePath: 'assets/icons/brand_logo/adidas.svg', label: 'Adidas',),
+                    const SizedBox(width: 10),
+                    Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                          color: AppColor.primaryColor,
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: SvgPicture.asset('assets/icons/mice_icon_home.svg',height: 24,width: 24,fit: BoxFit.none,),
+                    )
                   ],
                 ),
-              ),
-              const SizedBox(height: 30),
+                const SizedBox(height: 20),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Choose Brand',
+                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500,height: 1.1,color: Color(0xff1D1E20)),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text('View All',style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400,height: 1.1,color: Color(0xff8F959E))),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+            const SizedBox(height: 5),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
                 children: [
-                  Text(
-                    'New Arrival',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500,height: 1.1,color: Color(0xff1D1E20)),
+                  BrandLogo(imagePath: 'assets/icons/brand_logo/adidas.svg', label: 'Adidas',),
+                  BrandLogo(imagePath: 'assets/icons/brand_logo/adidas.svg', label: 'Adidas',),
+                  BrandLogo(imagePath: 'assets/icons/brand_logo/adidas.svg', label: 'Adidas',),
+                  BrandLogo(imagePath: 'assets/icons/brand_logo/adidas.svg', label: 'Adidas',),
+                  BrandLogo(imagePath: 'assets/icons/brand_logo/adidas.svg', label: 'Adidas',),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 30),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'New Arrival',
+                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500,height: 1.1,color: Color(0xff1D1E20)),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text('View All',style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400,height: 1.1,color: Color(0xff8F959E))),
+                      ),
+                    ],
                   ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text('View All',style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400,height: 1.1,color: Color(0xff8F959E))),
+                  const SizedBox(height: 10),
+
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: _productController.products.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.7,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    itemBuilder: (context, index) {
+                      final product = _productController.products[index];
+                      return ProductCard(product: product);
+                    },
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
-
-              GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: _productController.products.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.7,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemBuilder: (context, index) {
-                  final product = _productController.products[index];
-                  return ProductCard(product: product);
-                },
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
 
