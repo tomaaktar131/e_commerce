@@ -4,7 +4,6 @@ import 'package:e_commerce_project/features/splash/splash_screen.dart';
 
 import 'package:get/get.dart';
 
-import '../controller/product_controller.dart';
 import '../features/auth/forgot_password_screen.dart';
 import '../features/auth/reset_password_screen.dart';
 import '../features/auth/verification_code_screen.dart';

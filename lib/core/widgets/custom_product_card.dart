@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../routes/route.dart';
 
@@ -37,22 +38,36 @@ class ProductCard extends StatelessWidget {
     return Container(
       height: 257,
       width: 160,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(15)),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 203,
-            width: double.infinity,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
-            child: Image.asset(product.imagePath_1, fit: BoxFit.fill),
+          Stack(
+            children: [
+              SizedBox(
+                height: 203,
+                width: double.infinity,
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.asset(product.imagePath_1, fit: BoxFit.fill)),
+              ),
+              Positioned(
+                top: -1,
+                right: -3,
+                child: IconButton(
+                  onPressed: () {},
+                  icon: SvgPicture.asset('assets/icons/favourite_icon.svg'),
+                ),
+              ),
+            ],
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: GestureDetector(
               onTap: () {
-                Get.toNamed(RoutePages.productDetails,arguments: product);
+                Get.toNamed(RoutePages.productDetails, arguments: product);
               },
               child: Text(
                 product.productName,

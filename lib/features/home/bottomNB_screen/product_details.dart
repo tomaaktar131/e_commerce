@@ -34,11 +34,15 @@ class ProductDetails extends StatelessWidget {
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
-                height: 350,
-                width: double.infinity,
-                child: Image.asset(product.imagePath_1, fit: BoxFit.fill),
+              Align(
+                alignment: Alignment.center,
+                child: SizedBox(
+                  height: 350,
+                  width: 340,
+                  child: Image.asset(product.imagePath_1, fit: BoxFit.fill),
+                ),
               )
             ],
           ),
