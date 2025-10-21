@@ -7,18 +7,16 @@ import 'package:get/get.dart';
 import '../features/auth/forgot_password_screen.dart';
 import '../features/auth/reset_password_screen.dart';
 import '../features/auth/verification_code_screen.dart';
-import '../features/home/bottomNB_screen/cart_page.dart';
-import '../features/home/bottomNB_screen/home_page.dart';
-import '../features/home/bottomNB_screen/product_details.dart';
-import '../features/home/bottomNB_screen/wishlist_page.dart';
-import '../features/home/drawer_screen/setting/about_us.dart';
-import '../features/home/drawer_screen/setting/privacy_policy.dart';
-import '../features/home/drawer_screen/setting/setting.dart';
-import '../features/home/drawer_screen/setting/terms_of_services.dart';
-import '../features/home/drawer_screen/user_information/account_information.dart';
-import '../features/home/drawer_screen/user_information/edit_account_information.dart';
-import '../features/home/home_screen.dart';
-
+import '../features/cart/cart_page.dart';
+import '../features/drawer_screen/setting/about_us.dart';
+import '../features/drawer_screen/setting/privacy_policy.dart';
+import '../features/drawer_screen/setting/setting.dart';
+import '../features/drawer_screen/setting/terms_of_services.dart';
+import '../features/drawer_screen/user_information/account_information.dart';
+import '../features/drawer_screen/user_information/edit_account_information.dart';
+import '../features/home/main_screen.dart';
+import '../features/home/product_details.dart';
+import '../features/home/view_all_product.dart';
 class RoutePages {
   static String splashScreen = '/';
   static String loginScreen = '/login_screen';
@@ -38,11 +36,12 @@ class RoutePages {
   static String privacyPolicy = '/privacy_policy';
   static String aboutUs = '/about_us';
 
-  static String homePage = '/home_page';
-  static String wishlistPage = '/wishlist_page';
+  // static String homePage = '/home_page';
+  // static String wishlistPage = '/wishlist_page';
   static String cartPage = '/cart_page';
 
   static String productDetails = '/product_details';
+  static String viewAllProduct = '/view_all_product';
 }
 
 
@@ -64,12 +63,13 @@ final getPages = [
   GetPage(name: RoutePages.privacyPolicy, page: () => PrivacyPolicy()),
   GetPage(name: RoutePages.aboutUs, page: () => AboutUs()),
 
-  GetPage(name: RoutePages.homePage, page: () => HomePage()),
-  GetPage(name: RoutePages.wishlistPage, page: () => WishlistPage()),
+  // GetPage(name: RoutePages.homePage, page: () => HomePage()),
+  // GetPage(name: RoutePages.wishlistPage, page: () => WishlistPage(favouriteProducts: [],)),
   GetPage(name: RoutePages.cartPage, page: () => CartPage()),
 
 
   GetPage(name: RoutePages.productDetails, page: () => ProductDetails(),),
+  GetPage(name: RoutePages.viewAllProduct, page: () => ViewAllProduct(),),
 
 
 ];

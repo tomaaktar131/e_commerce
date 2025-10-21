@@ -1,13 +1,14 @@
 import 'package:e_commerce_project/core/theme/app_colors.dart';
 import 'package:e_commerce_project/core/theme/app_text_styles.dart';
-import 'package:e_commerce_project/core/widgets/custom_elevated_button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:e_commerce_project/routes/route.dart';
 
 import '../../controller/auth_controller.dart';
-import '../../core/widgets/custom_text_field.dart';
+import '../../core/custom_widgets/custom_elevated_button.dart';
+import '../../core/custom_widgets/custom_text_field.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

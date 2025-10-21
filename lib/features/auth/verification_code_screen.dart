@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
+import '../../core/custom_widgets/custom_elevated_button.dart';
 import '../../helpers/time_formater.dart';
 import '../../routes/route.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../../core/widgets/custom_elevated_button.dart';
 
 class VerificationCodeScreen extends StatefulWidget {
   const VerificationCodeScreen({super.key});

@@ -3,12 +3,13 @@ import 'package:e_commerce_project/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../core/custom_widgets/custom_elevated_button.dart';
+import '../../core/custom_widgets/custom_text_field.dart';
 import '../../routes/route.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../../core/widgets/custom_elevated_button.dart';
-import '../../core/widgets/custom_text_field.dart';
+
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});

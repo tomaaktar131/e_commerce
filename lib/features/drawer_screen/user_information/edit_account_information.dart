@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:e_commerce_project/core/theme/app_colors.dart';
-import 'package:e_commerce_project/core/widgets/custom_elevated_button.dart';
 import 'package:e_commerce_project/routes/route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../../controller/user_info_controller.dart';
+import '../../../core/custom_widgets/custom_elevated_button.dart';
 
 class EditAccountInformation extends StatefulWidget {
   const EditAccountInformation({super.key});

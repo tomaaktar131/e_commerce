@@ -3,10 +3,11 @@ import 'package:e_commerce_project/routes/route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../core/custom_widgets/custom_elevated_button.dart';
+import '../../core/custom_widgets/custom_text_field.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../../core/widgets/custom_elevated_button.dart';
-import '../../core/widgets/custom_text_field.dart';
+
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
