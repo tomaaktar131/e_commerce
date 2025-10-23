@@ -97,7 +97,10 @@ class _SignupScreenState extends State<SignupScreen> {
 
                  Obx(()=> Switch(
 
-                    activeTrackColor: Color(0xff34C759),
+                   activeTrackColor: Color(0xff34C759),
+                   activeThumbColor: Colors.white,
+                   inactiveThumbColor: Colors.white,
+                   inactiveTrackColor:Color(0xff34C759) ,
                     value: _authController.signupRememberMe.value,
                     onChanged: _authController.signupToggleSwitch,
                   ),)

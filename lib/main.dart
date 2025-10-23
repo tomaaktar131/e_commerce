@@ -14,7 +14,11 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        canvasColor:  Color(0xffFEFEFE),
         scaffoldBackgroundColor: Color(0xffFEFEFE),
+        appBarTheme: AppBarTheme(
+          backgroundColor:  Color(0xffFEFEFE) ,
+        )
         // colorScheme: ColorScheme.fromSeed(
         //
         //   seedColor:AppColor.primaryColor,

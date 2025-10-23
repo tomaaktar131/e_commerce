@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../../routes/route.dart';
 
@@ -101,117 +101,100 @@ body: SingleChildScrollView(
         ],
       ),
 
-      GridView.builder(
+      MasonryGridView.count(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemCount: products.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.7,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-        ),
+        crossAxisCount: 2,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+
         itemBuilder: (context, index) {
-          final product = products[index];
+          final product =products[index];
           final isFav = favouriteProducts.contains(product);
-          return Card(
-            elevation: 0,
-            color: Color(0xffFEFEFE),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  children: [
-                    SizedBox(
-                      height: 203,
-                      width: double.infinity,
-                      child: GestureDetector(
-                        onTap: () {
-                          Get.toNamed(
-                            RoutePages.productDetails,
-                            arguments: product,
-                          );
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Image.asset(
-                            product["imagePath_1"],
-                            fit: BoxFit.fitHeight,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 4,
-                      right: 10,
-                      child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            if (favouriteProducts.contains(
-                              product,
-                            )) {
-                              favouriteProducts.remove(
-                                product,
-                              );
-                            } else {
-                              favouriteProducts.add(product);
-                            }
-                          });
-                        },
-                        icon: isFav
-                            ? Icon(
-                          Icons.favorite_rounded,
-                          color: Colors.red,
-                          size: 20,
-                        )
-                            : SvgPicture.asset(
-                          'assets/icons/favourite_icon.svg',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  child: GestureDetector(
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
+                children: [
+                  GestureDetector(
                     onTap: () {
                       Get.toNamed(
                         RoutePages.productDetails,
                         arguments: product,
                       );
                     },
-                    child: Text(
-                      product["productTitle"],
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      style: TextStyle(
-                        color: Color(0xff1D1E20),
-                        fontWeight: FontWeight.w500,
-                        fontSize: 11,
-                        height: 1.3,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+
+                      child: Image(
+                        height: 203,
+                        width: double.infinity,
+                        image: AssetImage(product["imagePath_1"]),
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                  ),
-                  child: Text(
-                    '\$${product["price"]}',
-                    style: TextStyle(
-                      color: Color(0xff1D1E20),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
+
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          if (favouriteProducts.contains(
+                            product,
+                          )) {
+                            favouriteProducts.remove(product);
+                          } else {
+                            favouriteProducts.add(product);
+                          }
+                        });
+                      },
+                      icon: isFav
+                          ? Icon(
+                        Icons.favorite_rounded,
+                        color: Colors.red,
+                        size: 20,
+                      )
+                          : SvgPicture.asset(
+                        'assets/icons/favourite_icon.svg',
+                      ),
                     ),
                   ),
+                ],
+              ),
+
+              GestureDetector(
+                onTap: () {
+                  Get.toNamed(
+                    RoutePages.productDetails,
+                    arguments: product,
+                  );
+                },
+                child: Text(
+                  product["productTitle"],
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: TextStyle(
+                    color: Color(0xff1D1E20),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 11,
+                    height: 1.3,
+                  ),
                 ),
-              ],
-            ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                '\$${product["price"]}',
+                style: TextStyle(
+                  color: Color(0xff1D1E20),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           );
         },
       ),

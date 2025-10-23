@@ -1,25 +1,18 @@
-import 'dart:io';
-
 import 'package:e_commerce_project/core/theme/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-
-import '../../controller/user_info_controller.dart';
 import '../../core/custom_widgets/brand_logo_widget.dart';
-import '../../core/custom_widgets/custom_elevated_button.dart';
 import '../../core/theme/app_colors.dart';
 import '../../routes/route.dart';
+import '../main page/dummy_product.dart';
+import '../main page/main_screen.dart';
 
 class HomePage extends StatefulWidget {
-  final List<Map<String, dynamic>> products;
-  final List<Map<String, dynamic>> favoriteProducts;
-  final Function(Map<String, dynamic>) onFavoriteToggle;
   const HomePage({
     super.key,
-    required this.products,
-    required this.favoriteProducts,
-    required this.onFavoriteToggle,
+
   });
 
   @override
@@ -27,16 +20,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _controller = Get.put(UserInfoController());
 
-  final List favouriteProducts = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
 
-      drawer: buildDrawer(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,9 +55,11 @@ class _HomePageState extends State<HomePage> {
                       GestureDetector(
                         onTap: () {
                           Get.toNamed(
-                            RoutePages.viewAllProduct, arguments: [
-                            widget.products, widget.favoriteProducts
-                            ]
+                            RoutePages.viewAllProduct,
+                            arguments: [
+                             products,
+                              favouriteProducts,
+                            ],
                           );
                         },
                         child: Text(
@@ -84,117 +76,102 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(height: 15),
 
-                  GridView.builder(
+                  MasonryGridView.count(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: widget.products.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.7,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                    ),
+                    itemCount: products.length,
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+
                     itemBuilder: (context, index) {
-                      final product = widget.products[index];
-                      final isFav = widget.favoriteProducts.contains(product);
-                      return Card(
-                        elevation: 0,
-                        color: Color(0xffFEFEFE),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Stack(
-                              children: [
-                                SizedBox(
-                                  height: 203,
-                                  width: double.infinity,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Get.toNamed(
-                                        RoutePages.productDetails,
-                                        arguments: product,
-                                      );
-                                    },
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: Image.asset(
-                                        product["imagePath_1"],
-                                        fit: BoxFit.fitHeight,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 4,
-                                  right: 10,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        if (widget.favoriteProducts.contains(
-                                          product,
-                                        )) {
-                                          widget.favoriteProducts.remove(
-                                            product,
-                                          );
-                                        } else {
-                                          widget.favoriteProducts.add(product);
-                                        }
-                                      });
-                                    },
-                                    icon: isFav
-                                        ? Icon(
-                                            Icons.favorite_rounded,
-                                            color: Colors.red,
-                                            size: 20,
-                                          )
-                                        : SvgPicture.asset(
-                                            'assets/icons/favourite_icon.svg',
-                                          ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              child: GestureDetector(
+                      final product = products[index];
+                      final isFav = favouriteProducts.contains(product);
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Stack(
+                            children: [
+                              GestureDetector(
                                 onTap: () {
                                   Get.toNamed(
                                     RoutePages.productDetails,
                                     arguments: product,
                                   );
                                 },
-                                child: Text(
-                                  product["productTitle"],
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                    color: Color(0xff1D1E20),
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 11,
-                                    height: 1.3,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+
+                                  child: Image(
+                                    height: 203,
+                                    width: double.infinity,
+                                    image: AssetImage(product["imagePath_1"]),
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
-                              ),
-                              child: Text(
-                                '\$${product["price"]}',
-                                style: TextStyle(
-                                  color: Color(0xff1D1E20),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
+
+                              Positioned(
+                                top: 10,
+                                right: 10,
+                                child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      if (favouriteProducts.contains(
+                                        product,
+                                      )) {
+                                       favouriteProducts.remove(
+                                          product,
+                                        );
+                                      } else {
+                                        favouriteProducts.add(product);
+                                      }
+                                    });
+                                  },
+                                  icon: isFav
+                                      ? Icon(
+                                          Icons.favorite_rounded,
+                                          color: Colors.red,
+                                          size: 20,
+                                        )
+                                      : SvgPicture.asset(
+                                          'assets/icons/favourite_icon.svg',
+                                        ),
                                 ),
                               ),
+                            ],
+                          ),
+
+                          GestureDetector(
+                            onTap: () {
+                              Get.toNamed(
+                                RoutePages.productDetails,
+                                arguments: product,
+                              );
+                            },
+                            child: Text(
+                              product["productTitle"],
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextStyle(
+                                color: Color(0xff1D1E20),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 11,
+                                height: 1.3,
+                              ),
                             ),
-                          ],
-                        ),
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            '\$${product["price"]}',
+                            style: TextStyle(
+                              color: Color(0xff1D1E20),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       );
                     },
                   ),
@@ -280,7 +257,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {Get.toNamed( RoutePages.viewAllBrands);},
                 child: Text(
                   'View All',
                   style: TextStyle(
@@ -298,228 +275,18 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Drawer buildDrawer() {
-    return Drawer(
-      child: Column(
-        children: [
-          SizedBox(height: 50),
-          ListTile(
-            leading: CircleAvatar(
-              radius: 22,
-              backgroundColor: const Color(0xffF5F6FA),
-              child: GestureDetector(
-                onTap: () {
-                  Get.back();
-                },
-                child: SvgPicture.asset(
-                  'assets/icons/drawer_icon/drawer_back.svg',
-                  height: 25,
-                  width: 25,
-                ),
-              ),
-            ),
-          ),
 
-          SizedBox(height: 40),
-          ListTile(
-            onTap: () {},
-            title: Text(
-              _controller.nameCtrl.text,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w500,
-                height: 1.1,
-              ),
-            ),
-            leading: CircleAvatar(
-              radius: 22,
-              backgroundColor: const Color(0xffF5F6FA),
-              backgroundImage: _controller.imagePath.isNotEmpty
-                  ? FileImage(File(_controller.imagePath.toString()))
-                  : null,
-            ),
-          ),
-          ListTile(
-            onTap: () {
-              Get.toNamed(RoutePages.accountInformation);
-            },
-            title: Text(
-              'Account Information',
-              style: TextStyle(
-                color: Color(0xff1D1E20),
-                fontSize: 15,
-                fontWeight: FontWeight.w400,
-                height: 1.1,
-              ),
-            ),
-            leading: SvgPicture.asset(
-              'assets/icons/drawer_icon/account_info.svg',
-            ),
-          ),
-          ListTile(
-            onTap: () {},
-            title: Text(
-              'Order ',
-              style: TextStyle(
-                fontSize: 15,
-                color: Color(0xff1D1E20),
-                fontWeight: FontWeight.w400,
-                height: 1.1,
-              ),
-            ),
-            leading: SvgPicture.asset(
-              'assets/icons/drawer_icon/order_info.svg',
-            ),
-          ),
-          ListTile(
-            onTap: () {},
-            title: Text(
-              'My Cards ',
-              style: TextStyle(
-                fontSize: 15,
-                color: Color(0xff1D1E20),
-                fontWeight: FontWeight.w400,
-                height: 1.1,
-              ),
-            ),
-            leading: SvgPicture.asset(
-              'assets/icons/drawer_icon/my_card_info.svg',
-            ),
-          ),
-          ListTile(
-            onTap: () {
-              Get.toNamed(RoutePages.setting);
-            },
-            title: Text(
-              'Settings ',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w400,
-                height: 1.1,
-              ),
-            ),
-            leading: SvgPicture.asset(
-              'assets/icons/drawer_icon/account_info.svg',
-            ),
-          ),
-          Spacer(),
-          ListTile(
-            onTap: () {
-              Get.bottomSheet(
-                Container(
-                  height: 300,
-                  padding: EdgeInsets.fromLTRB(20, 8, 20, 44),
-                  decoration: BoxDecoration(
-                    border: BoxBorder.all(color: Color(0xffE0E0E0), width: 1),
-                    color: Color(0xffFFFFFF),
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/drawer_icon/bottom_sheed_icon.svg',
-                      ),
-                      SizedBox(height: 18),
-                      Text(
-                        'Logout',
-                        style: TextStyle(
-                          color: Color(0xffE25252),
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 32),
-                      Text(
-                        'Are you sure you want to log out?',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                          color: Color(0xff6B7280),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(double.infinity, 55),
-                                backgroundColor: Color(0xffF6F2FF),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadiusGeometry.circular(
-                                    10,
-                                  ),
-                                  side: BorderSide(
-                                    color: AppColor.primaryColor,
-                                    width: 1,
-                                  ),
-                                ),
-                              ),
-                              onPressed: () {
-                                Get.offAllNamed(RoutePages.loginScreen);
-                              },
-                              child: Text(
-                                'Yes, Logout',
-                                style: TextStyle(
-                                  color: AppColor.primaryColor,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 17,
-                                  height: 1.1,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: CustomElevationButton(
-                              label: 'Cancel',
-                              onPress: () {
-                                Get.back();
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-            title: Text(
-              'Logout ',
-              style: TextStyle(
-                fontSize: 15,
-                color: Color(0xffFF5757),
-                fontWeight: FontWeight.w500,
-                height: 1.1,
-              ),
-            ),
-            leading: SvgPicture.asset(
-              'assets/icons/drawer_icon/logout_info.svg',
-            ),
-          ),
-          SizedBox(height: 94),
-        ],
-      ),
-    );
-  }
 
   AppBar buildAppBar() {
     return AppBar(
       backgroundColor: const Color(0xFFFEFEFE),
       elevation: 0,
       leadingWidth: 68,
-      leading: Builder(
-        builder: (context) {
-          return Padding(
+        leading: Padding(
             padding: const EdgeInsets.only(left: 20),
             child: GestureDetector(
               onTap: () {
-                Scaffold.of(context).openDrawer();
+                scaffoldKey.currentState!.openDrawer();
               },
               child: CircleAvatar(
                 backgroundColor: const Color(0xffF5F6FA),
@@ -529,14 +296,14 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+
+
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 20),
           child: GestureDetector(
-            onTap: () {},
+            onTap: () {Get.toNamed(RoutePages.cartPage);},
             child: CircleAvatar(
               backgroundColor: const Color(0xffF5F6FA),
               child: SvgPicture.asset(

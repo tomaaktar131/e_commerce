@@ -123,6 +123,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   Obx(
                     () => Switch(
                       activeTrackColor: Color(0xff34C759),
+                      activeThumbColor: Colors.white,
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor:Color(0xff34C759) ,
 
                       value: _authController.loginRememberMe.value,
                       onChanged: _authController.loginToggleSwitch,

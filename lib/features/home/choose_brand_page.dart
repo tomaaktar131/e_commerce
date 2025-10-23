@@ -1,29 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../../routes/route.dart';
 import '../main page/dummy_product.dart';
 
-class WishlistPage extends StatefulWidget {
-
-  const WishlistPage({super.key});
+class ChooseBrandPage extends StatefulWidget {
+  const ChooseBrandPage({super.key});
 
   @override
-  State<WishlistPage> createState() => _WishlistPageState();
+  State<ChooseBrandPage> createState() => _ChooseBrandPageState();
 }
 
-class _WishlistPageState extends State<WishlistPage> {
+class _ChooseBrandPageState extends State<ChooseBrandPage> {
   @override
   Widget build(BuildContext context) {
+    final args = Get.arguments;
+    final brandName = args[0];
+    final brandLogo = args[1];
+
+    final filteredProducts = products
+        .where((product) => product["brand"] == brandName)
+        .toList();
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: AppBar(centerTitle: true,
+        title: Container(
+          padding: EdgeInsets.all(10),
+          height: 45,
+          width: 68,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Color(0xffF5F6FA),
+          ),
+          child: SvgPicture.asset(brandLogo,),
+        ),
+      ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
-          mainAxisAlignment:MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
               children: [
@@ -31,7 +46,7 @@ class _WishlistPageState extends State<WishlistPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${favouriteProducts.length} Items",
+                      "${filteredProducts.length} Items",
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w500,
@@ -41,7 +56,7 @@ class _WishlistPageState extends State<WishlistPage> {
                     SizedBox(height: 5),
 
                     Text(
-                      "in wishlist",
+                      "Available in stock",
                       style: TextStyle(
                         fontSize: 15,
                         color: Colors.grey,
@@ -64,10 +79,10 @@ class _WishlistPageState extends State<WishlistPage> {
                       child: Center(
                         child: Row(
                           children: [
-                            SvgPicture.asset('assets/icons/edit_pen_.svg',fit: BoxFit.scaleDown,),
+                            SvgPicture.asset('assets/icons/sort.svg',fit: BoxFit.scaleDown,),
                             SizedBox(width: 5,),
                             Text(
-                              'Edit',
+                              'Sort',
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
@@ -82,29 +97,17 @@ class _WishlistPageState extends State<WishlistPage> {
                   ],
                 ),
               ],
-            ),
-            favouriteProducts.isEmpty
-                ?  Column(
-              crossAxisAlignment:CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: MediaQuery.of(context).size.height / 3,),
-                    Text(
-                      "No favorite products yet",
-                      style: TextStyle(fontSize: 22),
-                    ),
-                  ],
-                )
-
-                : MasonryGridView.count(
+            ),SizedBox(height: 20,),
+            MasonryGridView.count(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: favouriteProducts.length,
+              itemCount: filteredProducts.length,
               crossAxisCount: 2,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
 
               itemBuilder: (context, index) {
-                final product = favouriteProducts[index];
+                final product = filteredProducts[index];
                 final isFav = favouriteProducts.contains(product);
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -137,9 +140,7 @@ class _WishlistPageState extends State<WishlistPage> {
                           child: IconButton(
                             onPressed: () {
                               setState(() {
-                                if (favouriteProducts.contains(
-                                  product,
-                                )) {
+                                if (favouriteProducts.contains(product)) {
                                   favouriteProducts.remove(product);
                                 } else {
                                   favouriteProducts.add(product);
@@ -148,13 +149,13 @@ class _WishlistPageState extends State<WishlistPage> {
                             },
                             icon: isFav
                                 ? Icon(
-                              Icons.favorite_rounded,
-                              color: Colors.red,
-                              size: 20,
-                            )
+                                    Icons.favorite_rounded,
+                                    color: Colors.red,
+                                    size: 20,
+                                  )
                                 : SvgPicture.asset(
-                              'assets/icons/favourite_icon.svg',
-                            ),
+                                    'assets/icons/favourite_icon.svg',
+                                  ),
                           ),
                         ),
                       ],
@@ -192,30 +193,9 @@ class _WishlistPageState extends State<WishlistPage> {
                 );
               },
             ),
-
-
           ],
         ),
       ),
-
-    );
-  }
-
-  AppBar buildAppBar() {
-    return AppBar(
-      centerTitle: true,
-      title: Text(
-        'Wishlist',
-        style: TextStyle(
-          fontSize: 17,
-          fontWeight: FontWeight.w600,
-          height: 1.1,
-          color: Color(0xff1D1E20),
-        ),
-      ),
-      backgroundColor: const Color(0xFFFEFEFE),
-
-
     );
   }
 }

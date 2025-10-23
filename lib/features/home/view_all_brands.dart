@@ -1,0 +1,89 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+
+import '../../core/custom_widgets/brand_logo_widget.dart';
+import '../../routes/route.dart';
+
+class ViewAllBrands extends StatefulWidget {
+  const ViewAllBrands({super.key});
+
+  @override
+  State<ViewAllBrands> createState() => _ViewAllBrandsState();
+}
+
+class _ViewAllBrandsState extends State<ViewAllBrands> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text("All Brands"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+            GridView.builder(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              scrollDirection: Axis.vertical,
+              itemBuilder: (BuildContext context, int index) {
+                final brandLogo= brands[index]['icon'];
+                final brandName= brands[index]["name"];
+                return InkWell(
+                  onTap: (){
+                    Get.toNamed(RoutePages.chooseBrandPage,arguments: [brandName,brandLogo]);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    height: 50,
+                    width: 115,
+                    decoration: BoxDecoration(
+                      color: Color(0xffF5F6FA),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color(0xffFEFEFE),
+                          ),
+                          child: SvgPicture.asset(brandLogo,fit:BoxFit.scaleDown,),
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          brandName,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15,
+                            height: 1.1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              shrinkWrap: true,
+              itemCount: brands.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
+                childAspectRatio: 2.5,
+              ),
+            ),
+            ],
+          
+          ),
+        ),
+      ),
+    );
+  }
+}
