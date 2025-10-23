@@ -1,27 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import '../../controller/cart_controller.dart';
-import '../../core/custom_widgets/custom_elevated_button.dart';
-import '../../core/theme/app_colors.dart';
-import '../../routes/route.dart';
 
-class AddPaymentMethod extends StatefulWidget {
-  const AddPaymentMethod({super.key});
+import '../../../core/theme/app_colors.dart';
+import '../../../routes/route.dart';
+
+class MyCards extends StatefulWidget {
+  const MyCards({super.key});
 
   @override
-  State<AddPaymentMethod> createState() => _AddPaymentMethodState();
+  State<MyCards> createState() => _MyCardsState();
 }
 
-class _AddPaymentMethodState extends State<AddPaymentMethod> {
-final _controller =Get.put(CartController());
-  bool _isSaveAddress = false;
+class _MyCardsState extends State<MyCards> {
+
+  final String ownerName= 'Md Bayzid Hosen';
+  final String cardNumber= '5254 **** **** 7690';
+  final String balance= '3,763.87';
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Payment',
+          'Cards',
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w600,
@@ -78,7 +81,7 @@ final _controller =Get.put(CartController());
                       top: 111,
                       left: 25,
                       child: Text(
-                        '5254 **** **** 7690',
+                        cardNumber,
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w400,
@@ -92,7 +95,7 @@ final _controller =Get.put(CartController());
                       top: 143,
                       left: 25,
                       child: Text(
-                        '3,763.87',
+                        "\$$balance",
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -104,7 +107,7 @@ final _controller =Get.put(CartController());
                       top: 25,
                       left: 25,
                       child: Text(
-                        'Mrh Raju',
+                        ownerName,
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
@@ -129,7 +132,7 @@ final _controller =Get.put(CartController());
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    Get.toNamed(RoutePages.addNewCard);
+                    Get.toNamed(RoutePages.addCard);
                   },
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 50),
@@ -149,97 +152,13 @@ final _controller =Get.put(CartController());
                   ),
                 ),
 
-                SizedBox(height: 20),
-                _inputField('Card Owner', _controller.cardOwnerCtrl),
-                _inputField('Card Number', _controller.cardNumCtrl),
-                Row(
-                  children: [
-                    Expanded(child: _inputField('EXP', _controller.cardEXPCtrl)),
-                    SizedBox(width: 15),
-                    Expanded(child: _inputField('CVV', _controller.cardCVVCtrl)),
-                  ],
-                ),
 
-                Row(
-                  children: [
-                    Text(
-                      'Save card info',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Color(0xff1D1E20),
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Manrope',
-                        height: 1.1,
-                      ),
-                    ),
 
-                    Spacer(),
-                    Switch(
-                      activeTrackColor: Color(0xff34C759),
-                      activeThumbColor: Colors.white,
-                      inactiveThumbColor: Colors.white,
-                      inactiveTrackColor: Color(0xff34C759),
 
-                      value: _isSaveAddress,
-                      onChanged: (bool value) {
-                        setState(() {
-                          _isSaveAddress = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                SizedBox(height: 120),
 
-                CustomElevationButton(
-                  label: 'Save card',
-                  onPress: () {
-                    Get.toNamed(RoutePages.cartPage);
-                  },
-                ),
+
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _inputField(String label, TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 17,
-              height: 1.1,
-              color: Color(0xff1D1E20),
-            ),
-          ),
-          SizedBox(height: 10),
-          TextFormField(
-            readOnly: true,
-            controller: controller,
-            style: TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 15,
-              height: 1.1,
-              color: AppColor.grayColor,
-            ),
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Color(0xFFF5F6FA),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide.none,
-              ),
-            ),
-            validator: (value) =>
-                value == null || value.isEmpty ? 'Enter $label' : null,
           ),
         ],
       ),

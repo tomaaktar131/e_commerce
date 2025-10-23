@@ -110,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             ListTile(
               onTap: () {
-                Get.toNamed(RoutePages.addPaymentMethod);
+                Get.toNamed(RoutePages.myCards);
               },
               title: Text(
                 'My Cards ',

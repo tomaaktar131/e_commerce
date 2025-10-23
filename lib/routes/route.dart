@@ -10,6 +10,8 @@ import '../features/auth/verification_code_screen.dart';
 import '../features/cart/add_new_card.dart';
 import '../features/cart/add_payment_method.dart';
 import '../features/cart/cart_page.dart';
+import '../features/drawer_screen/my_cards/add_card.dart';
+import '../features/drawer_screen/my_cards/my_cards.dart';
 import '../features/drawer_screen/order/order_completed_tab.dart';
 import '../features/drawer_screen/order/order_page.dart';
 import '../features/drawer_screen/order/order_to_received_tab.dart';
@@ -43,6 +45,9 @@ class RoutePages {
 
   static String accountInformation = '/account_information';
   static String editAccountInformation = '/edit_account_information';
+  static String myCards = '/MyCards';
+
+
   static String orderPage = '/OrderPage';
   static String orderCompletedTab = '/OrderCompletedTab';
   static String orderToReceivedTab = '/OrderToReceivedTab';
@@ -55,6 +60,7 @@ class RoutePages {
   static String homePage = '/home_page';
   static String wishlistPage = '/wishlist_page';
   static String cartPage = '/cart_page';
+  static String addCard = '/AddCard';
 
   static String productDetails = '/product_details';
   static String viewAllProduct = '/view_all_product';
@@ -95,6 +101,9 @@ final getPages = [
     page: () => EditAccountInformation(),
   ),
 
+  GetPage(name: RoutePages.myCards, page: () => MyCards()),
+
+
   GetPage(name: RoutePages.orderPage, page: () => OrderPage()),
   GetPage(name: RoutePages.orderCompletedTab, page: () => OrderCompletedTab()),
   GetPage(
@@ -110,6 +119,7 @@ final getPages = [
   GetPage(name: RoutePages.homePage, page: () => HomePage()),
   GetPage(name: RoutePages.wishlistPage, page: () => WishlistPage()),
   GetPage(name: RoutePages.cartPage, page: () => CartPage()),
+  GetPage(name: RoutePages.addCard, page: () => AddCard()),
 
   GetPage(name: RoutePages.productDetails, page: () => ProductDetails()),
   GetPage(name: RoutePages.viewAllProduct, page: () => ViewAllProduct()),
@@ -118,7 +128,10 @@ final getPages = [
   GetPage(name: RoutePages.allReviewPage, page: () => AllReviewPage()),
   GetPage(name: RoutePages.addReviewPage, page: () => AddReviewPage()),
   GetPage(name: RoutePages.orderConfirmed, page: () => OrderConfirmed()),
-  GetPage(name: RoutePages.addDeliveryAddress, page: () => AddDeliveryAddress()),
+  GetPage(
+    name: RoutePages.addDeliveryAddress,
+    page: () => AddDeliveryAddress(),
+  ),
   GetPage(name: RoutePages.addPaymentMethod, page: () => AddPaymentMethod()),
   GetPage(name: RoutePages.addNewCard, page: () => AddNewCard()),
 ];

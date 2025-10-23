@@ -3,18 +3,18 @@ import 'package:e_commerce_project/routes/route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controller/cart_controller.dart';
-import '../../core/theme/app_colors.dart';
+import '../../../controller/cart_controller.dart';
+import '../../../core/theme/app_colors.dart';
 
-class AddNewCard extends StatefulWidget {
-  const AddNewCard({super.key});
+class AddCard extends StatefulWidget {
+  const AddCard({super.key});
 
   @override
-  _AddNewCardState createState() => _AddNewCardState();
+  _AddCardState createState() => _AddCardState();
 }
 
-class _AddNewCardState extends State<AddNewCard> {
-  int selectedMethod = 0; // ✅ 0 = Mastercard, 1 = PayPal, 2 = Bank
+class _AddCardState extends State<AddCard> {
+  int selectedMethod = 0; //  0 = Mastercard, 1 = PayPal, 2 = Bank
   final _controller =Get.put(CartController());
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class _AddNewCardState extends State<AddNewCard> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-
+            //  Payment Method Selection
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -63,7 +63,7 @@ class _AddNewCardState extends State<AddNewCard> {
 
             //  Add Card Button
             CustomElevationButton(label: 'Add Card', onPress: () {
-              Get.toNamed(RoutePages.addPaymentMethod);
+              Get.toNamed(RoutePages.myCards);
             },)
           ],
         ),
@@ -83,9 +83,9 @@ class _AddNewCardState extends State<AddNewCard> {
         height: 50,
         width: 100,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: isSelected ? Color(0xffFFEEE3) : Color(0xffF5F6FA),
-          border: isSelected? BoxBorder.all(color: Color(0xffFF5F00),width: 1):null
+            borderRadius: BorderRadius.circular(10),
+            color: isSelected ? Color(0xffFFEEE3) : Color(0xffF5F6FA),
+            border: isSelected? BoxBorder.all(color: Color(0xffFF5F00),width: 1):null
         ),
 
         child: Image.asset(image),
