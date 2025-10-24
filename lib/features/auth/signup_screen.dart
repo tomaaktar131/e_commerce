@@ -107,8 +107,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ],
               ),
 
-              SizedBox(height: 168),
-              SizedBox(height: 25),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.28),
 
               CustomElevationButton(
                 label: 'Sign Up',

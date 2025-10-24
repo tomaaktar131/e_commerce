@@ -160,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 25),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
 
               CustomElevationButton(
                 label: 'Login',

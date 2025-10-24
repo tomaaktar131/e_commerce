@@ -97,8 +97,8 @@ final AuthController _controller= Get.put(AuthController());
                   height: 1.4,
                 ),
               ),
-              SizedBox(height: 25),
 
+              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
               CustomElevationButton(
                 label: 'Reset Password',
                 onPress: () {

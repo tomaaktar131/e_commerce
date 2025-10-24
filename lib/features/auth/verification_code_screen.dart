@@ -166,7 +166,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                             )),
                     ],
                   ),
-                SizedBox(height: 25),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
 
                 CustomElevationButton(
                   label: 'Confirm Code',

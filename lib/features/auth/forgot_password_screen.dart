@@ -81,7 +81,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 25),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
 
               CustomElevationButton(
                 label: 'Confirm Mail',
