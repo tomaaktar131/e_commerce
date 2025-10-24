@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
+import '../../controller/home_page_controller.dart';
 import '../../routes/route.dart';
 
 class BrandLogo extends StatelessWidget {
 
-  const BrandLogo({super.key, });
+   BrandLogo({super.key, });
 
-
+final _controller=Get.put(HomePageController());
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -17,8 +18,8 @@ class BrandLogo extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 20),
         scrollDirection: Axis.horizontal,
         itemBuilder: (BuildContext context, int index) {
-         final brandLogo= brands[index]['icon'];
-         final brandName= brands[index]["name"];
+         final brandLogo= _controller.brands[index]['icon'];
+         final brandName= _controller.brands[index]["name"];
           return InkWell(
             onTap: (){
               Get.toNamed(RoutePages.chooseBrandPage,arguments: [brandName,brandLogo]);
@@ -62,16 +63,8 @@ class BrandLogo extends StatelessWidget {
         separatorBuilder: (BuildContext context, int index) {
           return SizedBox(width: 10);
         },
-        itemCount: brands.length,
+        itemCount: _controller.brands.length,
       ),
     );
   }
 }
-final List brands = [
-  {"name": "Adidas", "icon": "assets/icons/brand_logo/adidas.svg"},
-  {"name": "Nike", "icon": "assets/icons/brand_logo/nike.svg"},
-  {"name": "Fila", "icon": "assets/icons/brand_logo/fila.svg"},
-  {"name": "Adidas", "icon": "assets/icons/brand_logo/adidas.svg"},
-  {"name": "Nike", "icon": "assets/icons/brand_logo/nike.svg"},
-  {"name": "Fila", "icon": "assets/icons/brand_logo/fila.svg"},
-];

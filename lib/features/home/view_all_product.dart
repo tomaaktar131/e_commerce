@@ -3,6 +3,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
+import '../../controller/home_page_controller.dart';
 import '../../routes/route.dart';
 
 class ViewAllProduct extends StatefulWidget {
@@ -13,6 +14,7 @@ class ViewAllProduct extends StatefulWidget {
 }
 
 class _ViewAllProductState extends State<ViewAllProduct> {
+  final _controller=Get.put(HomePageController());
   @override
   Widget build(BuildContext context) {
     final List args = Get.arguments;
@@ -122,8 +124,7 @@ body: SingleChildScrollView(
                     onTap: () {
                       Get.toNamed(
                         RoutePages.productDetails,
-                        arguments: product,
-                      );
+                      );_controller.setSelectedProduct(product);
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),
@@ -141,17 +142,7 @@ body: SingleChildScrollView(
                     top: 10,
                     right: 10,
                     child: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          if (favouriteProducts.contains(
-                            product,
-                          )) {
-                            favouriteProducts.remove(product);
-                          } else {
-                            favouriteProducts.add(product);
-                          }
-                        });
-                      },
+                      onPressed: (){_controller.toggleFavourite(product);},
                       icon: isFav
                           ? Icon(
                         Icons.favorite_rounded,
@@ -170,8 +161,7 @@ body: SingleChildScrollView(
                 onTap: () {
                   Get.toNamed(
                     RoutePages.productDetails,
-                    arguments: product,
-                  );
+                  );_controller.setSelectedProduct(product);
                 },
                 child: Text(
                   product["productTitle"],
@@ -180,7 +170,7 @@ body: SingleChildScrollView(
                   style: TextStyle(
                     color: Color(0xff1D1E20),
                     fontWeight: FontWeight.w500,
-                    fontSize: 11,
+                    fontSize: 13,
                     height: 1.3,
                   ),
                 ),

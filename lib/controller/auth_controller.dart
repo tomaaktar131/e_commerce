@@ -99,12 +99,4 @@ class AuthController extends GetxController {
     return null;
   }
 
-  void submitForm() {
-    if (loginFormKey.currentState!.validate()) {
-      print("Email : ${loginEmailController.text} ");
-      print("Email : ${loginPasswordController.text} ");
-      print("Switch : $loginRememberMe ");
-      print("Switch : $loginObscure ");
-    }
-  }
 }

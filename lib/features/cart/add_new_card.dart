@@ -3,7 +3,7 @@ import 'package:e_commerce_project/routes/route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controller/cart_controller.dart';
+import '../../controller/my_cards_controller.dart';
 import '../../core/theme/app_colors.dart';
 
 class AddNewCard extends StatefulWidget {
@@ -14,8 +14,7 @@ class AddNewCard extends StatefulWidget {
 }
 
 class _AddNewCardState extends State<AddNewCard> {
-  int selectedMethod = 0; // ✅ 0 = Mastercard, 1 = PayPal, 2 = Bank
-  final _controller =Get.put(CartController());
+  final _controller =Get.put(MyCardsController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,54 +29,59 @@ class _AddNewCardState extends State<AddNewCard> {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Form(
+            key: _controller.formKey,
+            child: Column(
               children: [
-                _buildMethodIcon(
-                  0,
-                  "assets/icons/mastercard.png",
-                  "Mastercard",
+
+                Obx(()=>
+                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildMethodIcon(
+                        0,
+                        "assets/icons/mastercard.png",
+                        "Mastercard",
+                      ),
+                      _buildMethodIcon(1, 'assets/icons/paypal.png', "PayPal"),
+                      _buildMethodIcon(2, 'assets/icons/bank.png', "Bank"),
+                    ],
+                  ),
                 ),
-                _buildMethodIcon(1, 'assets/icons/paypal.png', "PayPal"),
-                _buildMethodIcon(2, 'assets/icons/bank.png', "Bank"),
+                SizedBox(height: 24),
+                SizedBox(height: 20),
+                _inputField('Card Owner', _controller.cardOwnerCtrl),
+                _inputField('Card Number', _controller.cardNumCtrl),
+                Row(
+                  children: [
+                    Expanded(child: _inputField('EXP', _controller.cardEXPCtrl)),
+                    SizedBox(width: 15),
+                    Expanded(child: _inputField('CVV',_controller.cardCVVCtrl)),
+                  ],
+                ),
+
+                SizedBox(height: MediaQuery.of(context).size.height * 0.4),
+                CustomElevationButton(label: 'Add Card', onPress: () {
+                  if(_controller.formKey.currentState!.validate()) {
+                    Get.toNamed(RoutePages.addPaymentMethod);
+                  }
+                },)
               ],
             ),
-            SizedBox(height: 24),
-            SizedBox(height: 20),
-            _inputField('Card Owner', _controller.cardOwnerCtrl),
-            _inputField('Card Number', _controller.cardNumCtrl),
-            Row(
-              children: [
-                Expanded(child: _inputField('EXP', _controller.cardEXPCtrl)),
-                SizedBox(width: 15),
-                Expanded(child: _inputField('CVV',_controller.cardCVVCtrl)),
-              ],
-            ),
-
-            Spacer(),
-
-            //  Add Card Button
-            CustomElevationButton(label: 'Add Card', onPress: () {
-              Get.toNamed(RoutePages.addPaymentMethod);
-            },)
-          ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildMethodIcon(int index, image, String label) {
-    bool isSelected = selectedMethod == index;
+    bool isSelected = _controller.selectedIndex.value == index;
     return GestureDetector(
       onTap: () {
-        setState(() {
-          selectedMethod = index;
-        });
+      _controller.selectedMethod(index);
       },
       child: Container(
         height: 50,

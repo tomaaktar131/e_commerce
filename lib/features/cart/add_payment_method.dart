@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../controller/cart_controller.dart';
+import '../../controller/my_cards_controller.dart';
 import '../../core/custom_widgets/custom_elevated_button.dart';
+import '../../core/custom_widgets/debit_card_widget.dart';
 import '../../core/theme/app_colors.dart';
 import '../../routes/route.dart';
 
@@ -14,8 +16,8 @@ class AddPaymentMethod extends StatefulWidget {
 }
 
 class _AddPaymentMethodState extends State<AddPaymentMethod> {
-final _controller =Get.put(CartController());
-  bool _isSaveAddress = false;
+final _controller =Get.put(MyCardsController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,88 +40,19 @@ final _controller =Get.put(CartController());
               padding: EdgeInsets.symmetric(horizontal: 20),
               scrollDirection: Axis.horizontal,
               itemBuilder: (BuildContext context, int index) {
-                return Stack(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
-                      height: 185,
-                      width: 300,
-                      decoration: BoxDecoration(
-                        color: Color(0xffF5F6FA),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-
-                      child: ClipRRect(
-                        child: Image(
-                          image: AssetImage('assets/images/debit_card_bg.png'),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 25,
-                      right: 25,
-                      child: SvgPicture.asset(
-                        'assets/images/product/visa_icon_on_card.svg',
-                      ),
-                    ),
-                    Positioned(
-                      top: 89,
-                      left: 25,
-                      child: Text(
-                        'Visa Classic',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xffFEFEFE),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 111,
-                      left: 25,
-                      child: Text(
-                        '5254 **** **** 7690',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
-
-                          color: Color(0xffFEFEFE),
-                          letterSpacing: 3.85,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 143,
-                      left: 25,
-                      child: Text(
-                        '3,763.87',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xffFEFEFE),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 25,
-                      left: 25,
-                      child: Text(
-                        'Mrh Raju',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xffFEFEFE),
-                        ),
-                      ),
-                    ),
-                  ],
+                final card = _controller.cards[index];
+                return DebitCardWidget(
+                  ownerName: card['ownerName']!,
+                  cardType: card['cardType']!,
+                  cardNumber: card['cardNumber']!,
+                  balance: card['balance']!,
                 );
               },
               shrinkWrap: true,
               separatorBuilder: (BuildContext context, int index) {
                 return SizedBox(width: 10);
               },
-              itemCount: 2,
+              itemCount: _controller.cards.length,
             ),
           ),
           SizedBox(height: 15),
@@ -174,22 +107,19 @@ final _controller =Get.put(CartController());
                     ),
 
                     Spacer(),
-                    Switch(
-                      activeTrackColor: Color(0xff34C759),
-                      activeThumbColor: Colors.white,
-                      inactiveThumbColor: Colors.white,
-                      inactiveTrackColor: Color(0xff34C759),
+                    Obx(()=> Switch(
+                        activeTrackColor: Color(0xff34C759),
+                        activeThumbColor: Colors.white,
+                        inactiveThumbColor: Colors.white,
+                        inactiveTrackColor: Color(0xff34C759),
 
-                      value: _isSaveAddress,
-                      onChanged: (bool value) {
-                        setState(() {
-                          _isSaveAddress = value;
-                        });
-                      },
+                        value: _controller.isSaveAddress.value,
+                        onChanged: (value)=>_controller.toggleSwitch(value),
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: 120),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.18),
 
                 CustomElevationButton(
                   label: 'Save card',

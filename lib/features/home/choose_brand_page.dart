@@ -3,8 +3,8 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
+import '../../controller/home_page_controller.dart';
 import '../../routes/route.dart';
-import '../main page/dummy_product.dart';
 
 class ChooseBrandPage extends StatefulWidget {
   const ChooseBrandPage({super.key});
@@ -14,13 +14,14 @@ class ChooseBrandPage extends StatefulWidget {
 }
 
 class _ChooseBrandPageState extends State<ChooseBrandPage> {
+  final _controller =Get.put(HomePageController());
   @override
   Widget build(BuildContext context) {
     final args = Get.arguments;
     final brandName = args[0];
     final brandLogo = args[1];
 
-    final filteredProducts = products
+    final filteredProducts = _controller.products
         .where((product) => product["brand"] == brandName)
         .toList();
     return Scaffold(
@@ -108,7 +109,6 @@ class _ChooseBrandPageState extends State<ChooseBrandPage> {
 
               itemBuilder: (context, index) {
                 final product = filteredProducts[index];
-                final isFav = favouriteProducts.contains(product);
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,8 +119,7 @@ class _ChooseBrandPageState extends State<ChooseBrandPage> {
                           onTap: () {
                             Get.toNamed(
                               RoutePages.productDetails,
-                              arguments: product,
-                            );
+                            );_controller.setSelectedProduct(product);
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
@@ -134,28 +133,24 @@ class _ChooseBrandPageState extends State<ChooseBrandPage> {
                           ),
                         ),
 
-                        Positioned(
-                          top: 10,
-                          right: 10,
-                          child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                if (favouriteProducts.contains(product)) {
-                                  favouriteProducts.remove(product);
-                                } else {
-                                  favouriteProducts.add(product);
-                                }
-                              });
-                            },
-                            icon: isFav
-                                ? Icon(
-                                    Icons.favorite_rounded,
-                                    color: Colors.red,
-                                    size: 20,
-                                  )
-                                : SvgPicture.asset(
-                                    'assets/icons/favourite_icon.svg',
-                                  ),
+                        Obx(()=>
+                           Positioned(
+                            top: 10,
+                            right: 10,
+                            child: IconButton(
+                              onPressed: () {
+                                _controller.toggleFavourite(product);
+                              },
+                              icon: _controller.favouriteProducts.contains(product)
+                                  ? Icon(
+                                      Icons.favorite_rounded,
+                                      color: Colors.red,
+                                      size: 20,
+                                    )
+                                  : SvgPicture.asset(
+                                      'assets/icons/favourite_icon.svg',
+                                    ),
+                            ),
                           ),
                         ),
                       ],
@@ -165,8 +160,8 @@ class _ChooseBrandPageState extends State<ChooseBrandPage> {
                       onTap: () {
                         Get.toNamed(
                           RoutePages.productDetails,
-                          arguments: product,
-                        );
+
+                        );_controller.setSelectedProduct(product);
                       },
                       child: Text(
                         product["productTitle"],

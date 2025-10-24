@@ -4,37 +4,28 @@ import 'package:e_commerce_project/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../controller/main_page_controller.dart';
 import '../../controller/user_info_controller.dart';
 import '../../core/custom_widgets/custom_elevated_button.dart';
 import '../../routes/route.dart';
-import '../cart/cart_page.dart';
-import 'dummy_product.dart';
-import '../home/home_page.dart';
-import '../wishlist/wishlist_page.dart';
-GlobalKey<ScaffoldState> scaffoldKey =GlobalKey<ScaffoldState>();
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+
+GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<MainPage> createState() => _MainPageState();
 }
-class _HomeScreenState extends State<HomeScreen> {
-  int currentIndex = 0;
 
-
-  late final pages = [
-    HomePage(
-    ),
-    WishlistPage(),
-    CartPage(),
-  ];
+class _MainPageState extends State<MainPage> {
   final _controller = Get.put(UserInfoController());
+  final _mainPageController = Get.put(MainPageController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
       drawer: Drawer(
-
         child: Column(
           children: [
             SizedBox(height: 50),
@@ -245,46 +236,46 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: pages[currentIndex],
+      body:Obx(()=> _mainPageController.pages[_mainPageController.currentIndex.value],),
 
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
+      bottomNavigationBar: Obx(
+        () => BottomNavigationBar(
+          currentIndex: _mainPageController.currentIndex.value,
+          onTap: (index) {
+            _mainPageController.changePage(index);
+          },
           selectedFontSize: 12,
-        unselectedFontSize: 12,
-        items: [
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'assets/icons/bottomNB_Icon/bnb_home.svg',
-              color: currentIndex == 0
-                  ? AppColor.primaryColor
-                  : AppColor.grayColor,
+          unselectedFontSize: 12,
+          items: [
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/icons/bottomNB_Icon/bnb_home.svg',
+                color: _mainPageController.currentIndex.value == 0
+                    ? AppColor.primaryColor
+                    : AppColor.grayColor,
+              ),
+              label: 'Home',
             ),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'assets/icons/bottomNB_Icon/bnb_wishlist.svg',
-              color: currentIndex == 1
-                  ? AppColor.primaryColor
-                  : AppColor.grayColor,
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/icons/bottomNB_Icon/bnb_wishlist.svg',
+                color: _mainPageController.currentIndex.value == 1
+                    ? AppColor.primaryColor
+                    : AppColor.grayColor,
+              ),
+              label: 'Wishlist',
             ),
-            label: 'Wishlist',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'assets/icons/bottomNB_Icon/bnb_cart.svg',
-              color: currentIndex == 2
-                  ? AppColor.primaryColor
-                  : AppColor.grayColor,
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/icons/bottomNB_Icon/bnb_cart.svg',
+                color: _mainPageController.currentIndex.value == 2
+                    ? AppColor.primaryColor
+                    : AppColor.grayColor,
+              ),
+              label: 'Cart',
             ),
-            label: 'Cart',
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

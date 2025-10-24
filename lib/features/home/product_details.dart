@@ -1,9 +1,11 @@
+import 'package:e_commerce_project/core/theme/app_colors.dart';
 import 'package:e_commerce_project/routes/route.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
+import '../../controller/cart_controller.dart';
 import '../../controller/home_page_controller.dart';
 import '../../core/custom_widgets/custom_elevated_button.dart';
 import 'all_review_page.dart';
@@ -17,10 +19,13 @@ class ProductDetails extends StatefulWidget {
 
 class _ProductDetailsState extends State<ProductDetails> {
   final _controller = Get.put(HomePageController());
+  final _cartController = Get.put(CartController());
+
+
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> product = Get.arguments;
+    final product=_controller.selectedProduct;
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -214,20 +219,29 @@ class _ProductDetailsState extends State<ProductDetails> {
                           height: 60,
                           child: ListView.separated(
                             itemBuilder: (BuildContext context, int index) {
-                              return Container(
-                                height: 60,
-                                width: 60,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffF5F6FA),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    product["size"][index],
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w600,
-                                      height: 1.1,
+                              return GestureDetector(
+                                onTap: () {
+                                  _controller.selectSize(index, product);
+                                },
+                                child: Obx(
+                                  () => Container(
+                                    height: 60,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xffF5F6FA),
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: _controller.selectedSizeIndex.value == index ? Border.all(color: AppColor.primaryColor, width: 1) : null,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        product["size"][index],
+                                        style: const TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w600,
+                                          height: 1.1,
+                                          color: Color(0xff1D1E20),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -235,9 +249,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             },
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
-                            separatorBuilder:
-                                (BuildContext context, int index) =>
-                                    const SizedBox(width: 9),
+                            separatorBuilder: (BuildContext context, int index) => const SizedBox(width: 9),
                             itemCount: product["size"].length,
                           ),
                         ),
@@ -323,7 +335,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           shrinkWrap: true,
                           itemCount: 1,
                           itemBuilder: (context, index) {
-                            final review = reviews[index];
+                            final review = _controller.reviews[index];
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -332,10 +344,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     // Profile image
-                                    const CircleAvatar(
+                                    CircleAvatar(
                                       radius: 22,
-                                      backgroundImage: NetworkImage(
-                                        "https://i.pravatar.cc/150?img=3",
+                                      backgroundImage: AssetImage(
+                                        review['image'],
                                       ),
                                     ),
                                     const SizedBox(width: 10),
@@ -391,7 +403,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                 ),
                                               ),
                                               const TextSpan(
-                                                text: "rating",
+                                                text: " rating",
                                                 style: TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: 11,
@@ -403,33 +415,19 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         ),
                                         const SizedBox(height: 5),
                                         Row(
-                                          children: [
-                                            Icon(
-                                              Icons.star,
+                                          children: List.generate(5, (starIndex) {
+                                            double rating = (review['rating'] as num)
+                                                .toDouble();
+                                            return Icon(
+                                              starIndex < rating.floor()
+                                                  ? Icons.star
+                                                  : (starIndex < rating
+                                                  ? Icons.star_half
+                                                  : Icons.star_border),
                                               color: Colors.orange.shade400,
                                               size: 15,
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: Colors.orange.shade400,
-                                              size: 15,
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: Colors.orange.shade400,
-                                              size: 15,
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: Colors.orange.shade400,
-                                              size: 15,
-                                            ),
-                                            Icon(
-                                              Icons.star_border,
-                                              color: Colors.orange.shade400,
-                                              size: 15,
-                                            ),
-                                          ],
+                                            );
+                                          }),
                                         ),
                                       ],
                                     ),
@@ -557,7 +555,9 @@ class _ProductDetailsState extends State<ProductDetails> {
             ),
             SizedBox(height: 20),
 
-            CustomElevationButton(label: 'Add to Cart ', onPress: () {}),
+            CustomElevationButton(label: 'Add to Cart ', onPress: () {
+               _cartController.addToCart(_controller.selectedProduct.value);
+            }),
           ],
         ),
       ),

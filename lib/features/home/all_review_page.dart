@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../controller/home_page_controller.dart';
 import '../../routes/route.dart';
-class AllReviewPage extends StatelessWidget {
-  const AllReviewPage({super.key});
 
+class AllReviewPage extends StatelessWidget {
+   AllReviewPage({super.key});
+
+  final _controller = Get.put(HomePageController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +26,7 @@ class AllReviewPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           children: [
-            // ✅ Header
+            //  Header
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -31,17 +34,20 @@ class AllReviewPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      " ${reviews.length} Reviews",
+                      " ${_controller.reviews.length} Reviews",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.star, color: Colors.orange),
-                        Text("4.8", style: TextStyle(fontSize: 16)),
+                        Text(
+                          _controller.averageRating().toString(),
+                          style: TextStyle(fontSize: 16),
+                        ),
                       ],
                     ),
                   ],
@@ -82,136 +88,122 @@ class AllReviewPage extends StatelessWidget {
               ],
             ),
             SizedBox(height: 20),
-            // ✅ Review List
+            //  Review List
             Expanded(
-              child: ListView.builder(
-                itemCount: reviews.length,
-                itemBuilder: (context, index) {
-                  final review = reviews[index];
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // ======= Row 1: Profile + Name + Rating =======
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Profile image
-                           CircleAvatar(
-                            radius: 22,
-                            backgroundImage: AssetImage(
-                              review['image'],
+              child: Obx(
+                ()=> ListView.builder(
+                  itemCount: _controller.reviews.length,
+                  itemBuilder: (context, index) {
+                    final review = _controller.reviews[index];
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // ======= Row 1: Profile + Name + Rating =======
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Profile image
+                            CircleAvatar(
+                              radius: 22,
+                              backgroundImage: AssetImage(review['image']),
                             ),
-                          ),
-                          const SizedBox(width: 10),
-                          // Name + Date
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${review['name']}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Color(0xff1D1E20),
-                                    fontSize: 15,
-                                  ),
-                                ),
-                                const SizedBox(height: 7),
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/icons/time_icon.svg',
-                                      fit: BoxFit.scaleDown,
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      '${review['date']}',
-                                      style: const TextStyle(
-                                        fontSize: 11,
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Rating section
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: '${review['rating']}',
-                                      style: const TextStyle(
-                                        color: Color(0xff1D1E20),
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                    const TextSpan(
-                                      text: "rating",
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Row(
+                            const SizedBox(width: 10),
+                            // Name + Date
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    Icons.star,
-                                    color: Colors.orange.shade400,
-                                    size: 15,
+                                  Text(
+                                    '${review['name']}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xff1D1E20),
+                                      fontSize: 15,
+                                    ),
                                   ),
-                                  Icon(
-                                    Icons.star,
-                                    color: Colors.orange.shade400,
-                                    size: 15,
-                                  ),
-                                  Icon(
-                                    Icons.star,
-                                    color: Colors.orange.shade400,
-                                    size: 15,
-                                  ),
-                                  Icon(
-                                    Icons.star,
-                                    color: Colors.orange.shade400,
-                                    size: 15,
-                                  ),
-                                  Icon(
-                                    Icons.star_border,
-                                    color: Colors.orange.shade400,
-                                    size: 15,
+                                  const SizedBox(height: 7),
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/icons/time_icon.svg',
+                                        fit: BoxFit.scaleDown,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text(
+                                        '${review['date']}',
+                                        style: const TextStyle(
+                                          fontSize: 11,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-
-                      /// ======= Review Text =======
-                      Text(
-                        '${review['review']}',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                          height: 1.4,
+                            ),
+                            // Rating section
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: '${review['rating']}',
+                                        style: const TextStyle(
+                                          color: Color(0xff1D1E20),
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      const TextSpan(
+                                        text: " rating",
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Row(
+                                  children: List.generate(5, (starIndex) {
+                                    double rating = (review['rating'] as num)
+                                        .toDouble();
+                                    return Icon(
+                                      starIndex < rating.floor()
+                                          ? Icons.star
+                                          : (starIndex < rating
+                                                ? Icons.star_half
+                                                : Icons.star_border),
+                                      color: Colors.orange.shade400,
+                                      size: 15,
+                                    );
+                                  }),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ),
-                      SizedBox(height: 20),
-                    ],
-                  );
-                },
+                        const SizedBox(height: 12),
+
+                        /// ======= Review Text =======
+                        Text(
+                          '${review['review']}',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                            height: 1.4,
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ],
@@ -220,46 +212,3 @@ class AllReviewPage extends StatelessWidget {
     );
   }
 }
-
-final List<Map<String, dynamic>> reviews = [
-  {
-    "name": "Jenny Wilson",
-    "date": "13 Sep, 2020",
-    "rating": 4.8,
-    "review":
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...",
-    "image": "assets/images/person_1.png",
-  },
-  {
-    "name": "Jenny Wilson",
-    "date": "13 Sep, 2020",
-    "rating": 4.8,
-    "review":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...",
-    "image": "assets/images/person_2.png",
-  },
-  {
-    "name": "Jenny Wilson",
-    "date": "13 Sep, 2020",
-    "rating": 4.8,
-    "review":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...",
-    "image": "assets/images/person_3.png",
-  },
-  {
-    "name": "Jenny Wilson",
-    "date": "13 Sep, 2020",
-    "rating": 4.8,
-    "review":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...",
-    "image": "assets/images/person_1.png",
-  },
-  {
-    "name": "Jenny Wilson",
-    "date": "13 Sep, 2020",
-    "rating": 4.8,
-    "review":
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...",
-    "image": "assets/images/person_2.png",
-  },
-];

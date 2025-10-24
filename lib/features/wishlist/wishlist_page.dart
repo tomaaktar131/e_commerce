@@ -3,11 +3,10 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
+import '../../controller/home_page_controller.dart';
 import '../../routes/route.dart';
-import '../main page/dummy_product.dart';
 
 class WishlistPage extends StatefulWidget {
-
   const WishlistPage({super.key});
 
   @override
@@ -15,14 +14,27 @@ class WishlistPage extends StatefulWidget {
 }
 
 class _WishlistPageState extends State<WishlistPage> {
+  final _controller = Get.put(HomePageController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Wishlist',
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
+            height: 1.1,
+            color: Color(0xff1D1E20),
+          ),
+        ),
+        backgroundColor: const Color(0xFFFEFEFE),
+      ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
-          mainAxisAlignment:MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
@@ -31,7 +43,7 @@ class _WishlistPageState extends State<WishlistPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${favouriteProducts.length} Items",
+                      "${_controller.favouriteProducts.length} Items",
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w500,
@@ -64,8 +76,11 @@ class _WishlistPageState extends State<WishlistPage> {
                       child: Center(
                         child: Row(
                           children: [
-                            SvgPicture.asset('assets/icons/edit_pen_.svg',fit: BoxFit.scaleDown,),
-                            SizedBox(width: 5,),
+                            SvgPicture.asset(
+                              'assets/icons/edit_pen_.svg',
+                              fit: BoxFit.scaleDown,
+                            ),
+                            SizedBox(width: 5),
                             Text(
                               'Edit',
                               style: TextStyle(
@@ -83,139 +98,111 @@ class _WishlistPageState extends State<WishlistPage> {
                 ),
               ],
             ),
-            favouriteProducts.isEmpty
-                ?  Column(
-              crossAxisAlignment:CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: MediaQuery.of(context).size.height / 3,),
-                    Text(
-                      "No favorite products yet",
-                      style: TextStyle(fontSize: 22),
-                    ),
-                  ],
-                )
-
+            _controller.favouriteProducts.isEmpty
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: MediaQuery.of(context).size.height / 3),
+                      Text(
+                        "No favorite products yet",
+                        style: TextStyle(fontSize: 22),
+                      ),
+                    ],
+                  )
                 : MasonryGridView.count(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: favouriteProducts.length,
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: _controller.favouriteProducts.length,
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
 
-              itemBuilder: (context, index) {
-                final product = favouriteProducts[index];
-                final isFav = favouriteProducts.contains(product);
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Stack(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Get.toNamed(
-                              RoutePages.productDetails,
-                              arguments: product,
-                            );
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
+                    itemBuilder: (context, index) {
+                      final product = _controller.favouriteProducts[index];
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Stack(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Get.toNamed(
+                                    RoutePages.productDetails,
+                                  );_controller.setSelectedProduct(product);
+                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
 
-                            child: Image(
-                              height: 203,
-                              width: double.infinity,
-                              image: AssetImage(product["imagePath_1"]),
-                              fit: BoxFit.cover,
-                            ),
+                                  child: Image(
+                                    height: 203,
+                                    width: double.infinity,
+                                    image: AssetImage(product["imagePath_1"]),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+
+                              Obx(
+                                () => Positioned(
+                                  top: 10,
+                                  right: 10,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      _controller.toggleFavourite(product);
+                                    },
+                                    icon:
+                                        _controller.favouriteProducts.contains(
+                                          product,
+                                        )
+                                        ? Icon(
+                                            Icons.favorite_rounded,
+                                            color: Colors.red,
+                                            size: 20,
+                                          )
+                                        : SvgPicture.asset(
+                                            'assets/icons/favourite_icon.svg',
+                                          ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
 
-                        Positioned(
-                          top: 10,
-                          right: 10,
-                          child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                if (favouriteProducts.contains(
-                                  product,
-                                )) {
-                                  favouriteProducts.remove(product);
-                                } else {
-                                  favouriteProducts.add(product);
-                                }
-                              });
+                          GestureDetector(
+                            onTap: () {
+                              Get.toNamed(
+                                RoutePages.productDetails,
+                              );_controller.setSelectedProduct(product);
                             },
-                            icon: isFav
-                                ? Icon(
-                              Icons.favorite_rounded,
-                              color: Colors.red,
-                              size: 20,
-                            )
-                                : SvgPicture.asset(
-                              'assets/icons/favourite_icon.svg',
+                            child: Text(
+                              product["productTitle"],
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextStyle(
+                                color: Color(0xff1D1E20),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13,
+                                height: 1.3,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-
-                    GestureDetector(
-                      onTap: () {
-                        Get.toNamed(
-                          RoutePages.productDetails,
-                          arguments: product,
-                        );
-                      },
-                      child: Text(
-                        product["productTitle"],
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TextStyle(
-                          color: Color(0xff1D1E20),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 11,
-                          height: 1.3,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      '\$${product["price"]}',
-                      style: TextStyle(
-                        color: Color(0xff1D1E20),
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-
-
+                          SizedBox(height: 5),
+                          Text(
+                            '\$${product["price"]}',
+                            style: TextStyle(
+                              color: Color(0xff1D1E20),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
           ],
         ),
       ),
-
-    );
-  }
-
-  AppBar buildAppBar() {
-    return AppBar(
-      centerTitle: true,
-      title: Text(
-        'Wishlist',
-        style: TextStyle(
-          fontSize: 17,
-          fontWeight: FontWeight.w600,
-          height: 1.1,
-          color: Color(0xff1D1E20),
-        ),
-      ),
-      backgroundColor: const Color(0xFFFEFEFE),
-
-
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:e_commerce_project/routes/route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../controller/cart_controller.dart';
 import '../../core/theme/app_colors.dart';
 
 class AddDeliveryAddress extends StatefulWidget {
@@ -13,12 +14,7 @@ class AddDeliveryAddress extends StatefulWidget {
 }
 
 class _AddDeliveryAddressState extends State<AddDeliveryAddress> {
-  final _formKey = GlobalKey<FormState>();
-  final _phoneCtrl = TextEditingController(text: '+880 1990641482');
-  final _countryCtrl = TextEditingController(text: 'Bangladesh');
-  final _cityCtrl = TextEditingController(text: 'Faridpur');
-  final _addressCtrl = TextEditingController(text: 'Faridpur sador, Faridpur');
-  bool isSaveAddress = false;
+final _controller =Get.put(CartController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,63 +29,67 @@ class _AddDeliveryAddressState extends State<AddDeliveryAddress> {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            Form(
-              key: _formKey,
-              child: Column(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              Form(
+                child: Column(
+                  children: [
+                    SizedBox(height: 120),
+                    Row(
+                      children: [
+                        Expanded(child: _inputField("Country", _controller.countryCtrl)),
+                        SizedBox(width: 10),
+                        Expanded(child: _inputField("City", _controller.cityCtrl)),
+                      ],
+                    ),
+                    _inputField('Phone Number', _controller.phoneCtrl),
+                    _inputField('Address', _controller.addressCtrl),
+                  ],
+                ),
+              ),
+        
+              Row(
                 children: [
-                  SizedBox(height: 120),
-                  Row(
-                    children: [
-                      Expanded(child: _inputField("Country", _countryCtrl)),
-                      SizedBox(width: 10),
-                      Expanded(child: _inputField("City", _cityCtrl)),
-                    ],
+                  Text(
+                    'Save as primary address',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Color(0xff1D1E20),
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Manrope',
+                      height: 1.1,
+                    ),
                   ),
-                  _inputField('Phone Number', _phoneCtrl),
-                  _inputField('Address', _addressCtrl),
+                  Spacer(),
+        
+                  Obx(()=> Switch(
+                      activeTrackColor: Color(0xff34C759),
+                      activeThumbColor: Colors.white,
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor:Color(0xff34C759) ,
+        
+                      value: _controller.isSaveAddress.value,
+                      onChanged: (bool value) {
+                        _controller.isSaveAddress.value=value;
+        
+        
+                      },
+                    ),
+                  ),
                 ],
               ),
-            ),
-
-            Row(
-              children: [
-                Text(
-                  'Save as primary address',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Color(0xff1D1E20),
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Manrope',
-                    height: 1.1,
-                  ),
-                ),
-                Spacer(),
-
-                Switch(
-                  activeTrackColor: Color(0xff34C759),
-                  activeThumbColor: Colors.white,
-                  inactiveThumbColor: Colors.white,
-                  inactiveTrackColor:Color(0xff34C759) ,
-
-                  value: isSaveAddress,
-                  onChanged: (bool value) {
-                    setState(() {
-                      isSaveAddress=value;
-                    });
-
-                  },
-                ),
-              ],
-            ),
-            Spacer(),
-            CustomElevationButton(label: 'Save Address', onPress: () {
-              Get.toNamed(RoutePages.cartPage);
-            },)
-          ],
+              SizedBox(height: MediaQuery.of(context).size.height * 0.3),
+              CustomElevationButton(
+                label: 'Save Address',
+                onPress: () {
+                  Get.toNamed(RoutePages.cartPage);
+                },
+              )
+            ],
+          ),
         ),
       ),
     );

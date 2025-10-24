@@ -68,10 +68,6 @@ class _EditAccountInformationState extends State<EditAccountInformation> {
                     ),
                   ],
                 ),
-                // child: CircleAvatar(
-                //   radius: 80,
-                //   backgroundImage: AssetImage('assets/images/profile_pic.png'),
-                // ),
               ),
               _inputField('Name ', _controller.nameCtrl),
               _inputField('Email ', _controller.emailCtrl),

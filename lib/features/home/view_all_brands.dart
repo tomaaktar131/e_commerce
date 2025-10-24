@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-import '../../core/custom_widgets/brand_logo_widget.dart';
+import '../../controller/home_page_controller.dart';
 import '../../routes/route.dart';
 
 class ViewAllBrands extends StatefulWidget {
@@ -13,6 +13,7 @@ class ViewAllBrands extends StatefulWidget {
 }
 
 class _ViewAllBrandsState extends State<ViewAllBrands> {
+  final _controller=Get.put(HomePageController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,8 +30,8 @@ class _ViewAllBrandsState extends State<ViewAllBrands> {
               padding: EdgeInsets.symmetric(horizontal: 20),
               scrollDirection: Axis.vertical,
               itemBuilder: (BuildContext context, int index) {
-                final brandLogo= brands[index]['icon'];
-                final brandName= brands[index]["name"];
+                final brandLogo= _controller.brands[index]['icon'];
+                final brandName= _controller.brands[index]["name"];
                 return InkWell(
                   onTap: (){
                     Get.toNamed(RoutePages.chooseBrandPage,arguments: [brandName,brandLogo]);
@@ -71,7 +72,7 @@ class _ViewAllBrandsState extends State<ViewAllBrands> {
                 );
               },
               shrinkWrap: true,
-              itemCount: brands.length,
+              itemCount: _controller.brands.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 15,

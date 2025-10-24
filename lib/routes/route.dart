@@ -28,7 +28,7 @@ import '../features/home/choose_brand_page.dart';
 import '../features/home/home_page.dart';
 import '../features/cart/order_confirmed.dart';
 import '../features/home/view_all_brands.dart';
-import '../features/main page/main_screen.dart';
+import '../features/main page/main_page.dart';
 import '../features/home/product_details.dart';
 import '../features/home/view_all_product.dart';
 import '../features/wishlist/wishlist_page.dart';
@@ -90,7 +90,7 @@ final getPages = [
     name: RoutePages.resetPasswordScreen,
     page: () => ResetPasswordScreen(),
   ),
-  GetPage(name: RoutePages.homeScreen, page: () => HomeScreen()),
+  GetPage(name: RoutePages.homeScreen, page: () => MainPage()),
 
   GetPage(
     name: RoutePages.accountInformation,
