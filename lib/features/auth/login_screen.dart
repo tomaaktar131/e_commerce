@@ -57,9 +57,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     CustomTextField(
                       validator: _authController.validEmail,
-                      label: 'Email',
-                      hint: 'Enter your Email',
-                      controller: _authController.loginEmailController,
+                      label: 'Username',
+                      hint: 'Enter your username',
+                      controller: _authController.forgetPasswordEmailController,
                     ),
                     SizedBox(height: 20),
                     Obx(
@@ -162,13 +162,17 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.1),
 
-              CustomElevationButton(
-                label: 'Login',
-                onPress: () {
-                  if (_authController.loginFormKey.currentState!.validate()) {
-                    Get.offAllNamed(RoutePages.homeScreen);
-                  }
-                },
+              Obx(()=>
+                 CustomElevationButton(
+                  label: 'Login',
+                  isLoading: _authController.isLoading.value,
+
+                  onPress: () {
+                    if (_authController.loginFormKey.currentState!.validate()) {
+                      _authController.login(_authController.loginUserNameController.text, _authController.loginPasswordController.text);
+                    }
+                  },
+                ),
               ),
 
               SizedBox(height: 10),

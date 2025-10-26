@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
+import '../../Data/helpers/prefs_helper.dart';
+import '../../Data/utils/app_constants.dart';
 import '../../routes/route.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -20,9 +22,21 @@ class _SplashScreenState extends State<SplashScreen> {
     jumpToNextPage();
   }
 
+  // jumpToNextPage() {
+  //   Future.delayed(Duration(seconds: 3), () {
+  //     Get.offNamed(RoutePages.loginScreen);
+  //   });
+  // }
+
   jumpToNextPage() {
-    Future.delayed(Duration(seconds: 3), () {
-      Get.offNamed(RoutePages.loginScreen);
+    Future.delayed(Duration(seconds: 3), () async {
+      var token = await PrefsHelper.getString(AppConstants.bearerToken);
+      debugPrint(" issue token : $token");
+      if (token.isNotEmpty) {
+        Get.offAllNamed(RoutePages.mainPage);
+      } else {
+        Get.offAllNamed(RoutePages.loginScreen);
+      }
     });
   }
 

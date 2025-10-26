@@ -49,6 +49,12 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     SizedBox(height: 20),
                     CustomTextField(
+                      label: 'Username',
+                      hint: 'Enter your username',
+                      controller: _authController.signupUsernameController,
+                    ),
+                    SizedBox(height: 20),
+                    CustomTextField(
                       validator: _authController.validEmail,
                       label: 'Email',
                       hint: 'Enter your Email',
@@ -109,13 +115,17 @@ class _SignupScreenState extends State<SignupScreen> {
 
               SizedBox(height: MediaQuery.of(context).size.height * 0.28),
 
-              CustomElevationButton(
-                label: 'Sign Up',
-                onPress: () {
-                  if(_authController.signupFormKey.currentState!.validate()) {
-                    Get.offAllNamed(RoutePages.homeScreen);
-                  }
-                },
+              Obx(()=>
+                 CustomElevationButton(
+                  label: 'Sign Up',
+                  isLoading: _authController.isLoading.value,
+                  onPress: () {
+                    if(_authController.signupFormKey.currentState!.validate()) {
+                      _authController.signUp(_authController.signupNameController.text, _authController.signupUsernameController.text, _authController.signupEmailController.text, _authController.signupPasswordController.text);
+
+                    }
+                  },
+                ),
               ),
 
               SizedBox(height: 10),

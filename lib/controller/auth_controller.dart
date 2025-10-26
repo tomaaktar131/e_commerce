@@ -1,11 +1,21 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:e_commerce_project/routes/route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../Data/helpers/prefs_helper.dart';
+import '../Data/service/api_checker.dart';
+import '../Data/service/api_clint.dart';
+import '../Data/service/api_constant.dart';
+import '../Data/utils/app_constants.dart';
+
 class AuthController extends GetxController {
+  var isLoading = false.obs;
+
   /// <================================= login page ===============================> ///
-  final loginEmailController = TextEditingController();
+  final loginUserNameController = TextEditingController();
   final loginPasswordController = TextEditingController();
   final loginFormKey = GlobalKey<FormState>();
 
@@ -15,8 +25,32 @@ class AuthController extends GetxController {
   var loginObscure = false.obs;
   void loginObscurePassword() => loginObscure.value = !loginObscure.value;
 
+
+
+  login(String userName, password) async {
+    isLoading(true);
+    var headers = {'Content-Type': 'application/json'};
+    var response = await ApiClient.postData(
+      ApiConstant.login,
+      jsonEncode({"username":userName , "password": password}),
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      await PrefsHelper.setString(
+        AppConstants.bearerToken,
+        response.body['access'],
+      );
+      Get.offAllNamed(RoutePages.mainPage);
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    isLoading(false);
+  }
+
+
   /// <================================= signUp page ===============================> ///
   final signupNameController = TextEditingController();
+  final signupUsernameController = TextEditingController();
   final signupEmailController = TextEditingController();
   final signupPasswordController = TextEditingController();
   final signupFormKey = GlobalKey<FormState>();
@@ -26,6 +60,33 @@ class AuthController extends GetxController {
 
   var signupObscure = false.obs;
   void signupObscurePassword() => signupObscure.value = !signupObscure.value;
+
+
+
+  signUp(firstName, userName,  email,password,) async {
+    isLoading(true);
+    var headers = {'Content-Type': 'application/json'};
+    var response = await ApiClient.postData(
+      ApiConstant.signup,
+      jsonEncode({
+        "first_name":firstName,
+        "email":email,
+        "username": userName,
+        "password":password,
+      }),
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      await PrefsHelper.setString(
+        AppConstants.bearerToken,
+        response.body['access'],
+      );
+      Get.offAllNamed(RoutePages.mainPage);
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    isLoading(false);
+  }
 
   /// <================================= forget password page ===============================> ///
   final forgetPasswordEmailController = TextEditingController();
@@ -88,12 +149,12 @@ class AuthController extends GetxController {
 
   String? validEmail(String? value) {
     if (value == null || value.isEmpty) return "Please enter your email";
-    if (!value.contains('@')) return "Please enter valid email";
+    // if (!value.contains('@')) return "Please enter valid email";
     return null;
   }
 
   String? validPassword(String? value) {
-    if (value == null || value.length < 6) {
+    if (value == null || value.length<5) {
       return 'Minimum password 6 character';
     }
     return null;

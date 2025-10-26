@@ -41,7 +41,7 @@ class RoutePages {
   static String verificationCodeScreen = '/verification_code_screen';
   static String resetPasswordScreen = '/reset_password_screen';
 
-  static String homeScreen = '/home_screen';
+  static String mainPage = '/main_page';
 
   static String accountInformation = '/account_information';
   static String editAccountInformation = '/edit_account_information';
@@ -90,7 +90,7 @@ final getPages = [
     name: RoutePages.resetPasswordScreen,
     page: () => ResetPasswordScreen(),
   ),
-  GetPage(name: RoutePages.homeScreen, page: () => MainPage()),
+  GetPage(name: RoutePages.mainPage, page: () => MainPage()),
 
   GetPage(
     name: RoutePages.accountInformation,

@@ -89,7 +89,7 @@ class _EditAccountInformationState extends State<EditAccountInformation> {
                 label: 'Save Changes',
                 onPress: () {
                   if (_controller.formKey.currentState!.validate()) {
-                    Get.toNamed(RoutePages.homeScreen);
+                    Get.toNamed(RoutePages.mainPage);
                   }
                 },
               ),

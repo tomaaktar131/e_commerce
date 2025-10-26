@@ -49,7 +49,7 @@ class OrderConfirmed extends StatelessWidget {
             SizedBox(height: 15,),
             Spacer(),
             CustomElevationButton(label: 'Continue Shopping', onPress: () {
-              Get.offNamed(RoutePages.homeScreen);
+              Get.offNamed(RoutePages.mainPage);
             },)
           ],
         ),

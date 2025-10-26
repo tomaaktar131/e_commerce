@@ -4,6 +4,8 @@ import 'package:e_commerce_project/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import '../../Data/helpers/prefs_helper.dart';
+import '../../Data/utils/app_constants.dart';
 import '../../controller/main_page_controller.dart';
 import '../../controller/user_info_controller.dart';
 import '../../core/custom_widgets/custom_elevated_button.dart';
@@ -135,6 +137,7 @@ class _MainPageState extends State<MainPage> {
             Spacer(),
             ListTile(
               onTap: () {
+
                 Get.bottomSheet(
                   Container(
                     height: 300,
@@ -189,7 +192,8 @@ class _MainPageState extends State<MainPage> {
                                     ),
                                   ),
                                 ),
-                                onPressed: () {
+                                onPressed: () async{
+                                  await PrefsHelper.remove(AppConstants.bearerToken);
                                   Get.offAllNamed(RoutePages.loginScreen);
                                 },
                                 child: Text(
@@ -220,6 +224,7 @@ class _MainPageState extends State<MainPage> {
                 );
               },
               title: Text(
+
                 'Logout ',
                 style: TextStyle(
                   fontSize: 15,
