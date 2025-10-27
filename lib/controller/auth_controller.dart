@@ -25,14 +25,12 @@ class AuthController extends GetxController {
   var loginObscure = false.obs;
   void loginObscurePassword() => loginObscure.value = !loginObscure.value;
 
-
-
   login(String userName, password) async {
     isLoading(true);
     var headers = {'Content-Type': 'application/json'};
     var response = await ApiClient.postData(
       ApiConstant.login,
-      jsonEncode({"username":userName , "password": password}),
+      jsonEncode({"username": userName, "password": password}),
       headers: headers,
     );
     if (response.statusCode == 200) {
@@ -47,7 +45,6 @@ class AuthController extends GetxController {
     isLoading(false);
   }
 
-
   /// <================================= signUp page ===============================> ///
   final signupNameController = TextEditingController();
   final signupUsernameController = TextEditingController();
@@ -61,18 +58,16 @@ class AuthController extends GetxController {
   var signupObscure = false.obs;
   void signupObscurePassword() => signupObscure.value = !signupObscure.value;
 
-
-
-  signUp(firstName, userName,  email,password,) async {
+  signUp(firstName, userName, email, password) async {
     isLoading(true);
     var headers = {'Content-Type': 'application/json'};
     var response = await ApiClient.postData(
       ApiConstant.signup,
       jsonEncode({
-        "first_name":firstName,
-        "email":email,
+        "first_name": firstName,
+        "email": email,
         "username": userName,
-        "password":password,
+        "password": password,
       }),
       headers: headers,
     );
@@ -89,40 +84,73 @@ class AuthController extends GetxController {
   }
 
   /// <================================= forget password page ===============================> ///
-  final forgetPasswordEmailController = TextEditingController();
-  final forgetPasswordEmailFormKey = GlobalKey<FormState>();
+  final forgetPasswordUserController = TextEditingController();
+  final forgetPasswordUserFormKey = GlobalKey<FormState>();
+
+  forgetPassword(userName) async {
+    isLoading(true);
+    final headers = {'Content-Type': 'application/json'};
+    final response = await ApiClient.postData(
+      ApiConstant.forgetPassword,
+      jsonEncode({"username": userName}),
+      headers: headers,
+    );
+
+    if(response.statusCode==200){
+      Get.toNamed(RoutePages.verificationCodeScreen,arguments:userName);
+    }else{
+      ApiChecker.checkApi(response);
+    }
+    isLoading(false);
+  }
 
   /// <================================= OTP verification page ===============================> ///
 
   final otpController = TextEditingController();
   final otpFormKey = GlobalKey<FormState>();
 
-  RxInt secondsRemaining  = 30.obs;
+  RxInt secondsRemaining = 30.obs;
   RxBool enableResent = false.obs;
 
   Timer? timer;
 
-  void dispostTimer (){
+  void dispostTimer() {
     timer?.cancel();
-    secondsRemaining.value =30;
-    enableResent.value=false;
+    secondsRemaining.value = 30;
+    enableResent.value = false;
   }
 
-  void startTimer(){
+  void startTimer() {
     timer?.cancel();
-    secondsRemaining.value =30;
-    enableResent.value=false;
-    timer= Timer.periodic(
-      const Duration(seconds: 1), (timer){
-    if(secondsRemaining.value>0){
-      secondsRemaining.value--;
-    }else{
-      enableResent.value = true;
-      timer.cancel();
-    }
-    }
-    );
+    secondsRemaining.value = 30;
+    enableResent.value = false;
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (secondsRemaining.value > 0) {
+        secondsRemaining.value--;
+      } else {
+        enableResent.value = true;
+        timer.cancel();
+      }
+    });
   }
+
+  otpVerification(String otp, userName) async {
+    isLoading(true);
+    final headers = {'Content-Type': 'application/json'};
+    final response = await ApiClient.postData(
+      ApiConstant.otoVerify(userName),
+      jsonEncode({"otp": otp}),
+      headers: headers,
+    );
+
+    if(response.statusCode==200){
+      Get.toNamed(RoutePages.resetPasswordScreen,arguments: response.body['access']);
+    }else{
+      ApiChecker.checkApi(response);
+    }
+    isLoading(false);
+  }
+
 
 
 
@@ -133,31 +161,52 @@ class AuthController extends GetxController {
   RxBool newPasswordObscure = true.obs;
   RxBool confirmNewPasswordObscure = true.obs;
 
-
- String? validNewPassword(String? value){
-    if(newPasswordController.text.length<6)return "Minimum password 6 character";
-    if(newPasswordController.text!=value) {
+  String? validNewPassword(String? value) {
+    if (newPasswordController.text.length < 6)
+      return "Minimum password 6 character";
+    if (newPasswordController.text != value) {
       return "Password not match";
     }
 
     return null;
-
   }
 
+  resetPassword(String newPassword, refreshToken) async {
+    isLoading(true);
+    var headers = {'Content-Type': 'application/json',
+      'Authorization': 'Bearer $refreshToken'};
+    var response = await ApiClient.postData(
+      ApiConstant.resetPassword,
+      jsonEncode( {
+        "new_password":newPassword,
+      }),
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      Get.offAllNamed(RoutePages.loginScreen);
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    isLoading(false);
+  }
 
   /// <================================= all validator logic ===============================> ///
 
   String? validEmail(String? value) {
     if (value == null || value.isEmpty) return "Please enter your email";
-    // if (!value.contains('@')) return "Please enter valid email";
+    if (!value.contains('@')) return "Please enter valid email";
+    return null;
+  }
+
+  String? validUser(String? value) {
+    if (value == null || value.isEmpty) return "Please enter your UserName";
     return null;
   }
 
   String? validPassword(String? value) {
-    if (value == null || value.length<5) {
-      return 'Minimum password 6 character';
+    if (value == null || value.length < 5) {
+      return 'Minimum password 5 character';
     }
     return null;
   }
-
 }

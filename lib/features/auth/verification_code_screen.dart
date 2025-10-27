@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:e_commerce_project/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
 import '../../Data/helpers/time_formater.dart';
+import '../../Data/service/api_checker.dart';
+import '../../Data/service/api_clint.dart';
+import '../../Data/service/api_constant.dart';
 import '../../core/custom_widgets/custom_elevated_button.dart';
 import '../../routes/route.dart';
 
@@ -66,7 +71,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                   child: Column(
                     children: [
                       Pinput(
-                        length: 4,
+                        length: 6,
                         controller: _controller.otpController,
                         validator: (v) {
                           if (v == null || v.length < 4) {
@@ -75,8 +80,8 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                           return null;
                         },
                         defaultPinTheme: PinTheme(
-                          width: 77,
-                          height: 98,
+                          width: 60,
+                          height: 60,
                           textStyle: TextStyle(
                             fontSize: 22,
                             color: Color(0xff1D1E20),
@@ -89,8 +94,8 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                           ),
                         ),
                         focusedPinTheme: PinTheme(
-                          width: 77,
-                          height: 98,
+                          width: 60,
+                          height: 60,
                           textStyle: TextStyle(
                             fontSize: 22,
                             color: Color(0xff1D1E20),
@@ -103,8 +108,8 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                           ),
                         ),
                         errorPinTheme: PinTheme(
-                          width: 77,
-                          height: 98,
+                          width: 60,
+                          height: 60,
                           textStyle: TextStyle(
                             fontSize: 22,
                             color: Colors.red,
@@ -130,8 +135,19 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                     children: [
                       SizedBox(height: 146,),
                       TextButton(
-                        onPressed: () {
+                        onPressed: () async {
                           _controller.startTimer();
+                          _controller.isLoading(true);
+                          final headers = {'Content-Type': 'application/json'};
+                          final response = await ApiClient.postData(
+                            ApiConstant.forgetPassword,
+                            jsonEncode({"username": Get.arguments}), // Using Get.arguments to get username
+                            headers: headers,
+                          );
+                          if (response.statusCode != 200) {
+                            ApiChecker.checkApi(response);
+                          }
+                          _controller.isLoading(false);
                         },
                         child: Text('Resent OTP'),
                       ),
@@ -169,10 +185,11 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                 SizedBox(height: MediaQuery.of(context).size.height * 0.1),
 
                 CustomElevationButton(
+                  isLoading: _controller.isLoading.value,
                   label: 'Confirm Code',
                   onPress: () {
                     if (_controller.otpFormKey.currentState!.validate()) {
-                      Get.toNamed(RoutePages.resetPasswordScreen);
+                      _controller.otpVerification(_controller.otpController.text, Get.arguments);
                     }
                   },
                 ),

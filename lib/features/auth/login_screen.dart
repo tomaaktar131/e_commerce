@@ -1,3 +1,4 @@
+import 'package:e_commerce_project/controller/view_product_controller.dart';
 import 'package:e_commerce_project/core/theme/app_colors.dart';
 import 'package:e_commerce_project/core/theme/app_text_styles.dart';
 import 'package:flutter/gestures.dart';
@@ -19,8 +20,10 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _authController = Get.put(AuthController());
+  final ctrl =  Get.put( ViewProductController());
   @override
   Widget build(BuildContext context) {
+    // ctrl.getProducts();
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -56,10 +59,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   children: [
                     CustomTextField(
-                      validator: _authController.validEmail,
+                      validator: _authController.validUser,
                       label: 'Username',
                       hint: 'Enter your username',
-                      controller: _authController.forgetPasswordEmailController,
+                      controller: _authController.loginUserNameController,
                     ),
                     SizedBox(height: 20),
                     Obx(

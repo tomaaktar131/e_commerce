@@ -51,14 +51,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               SizedBox(height: 80),
 
               Form(
-                key: _authController.forgetPasswordEmailFormKey,
+                key: _authController.forgetPasswordUserFormKey,
                 child: Column(
                   children: [
                     CustomTextField(
-                      validator:_authController.validEmail ,
-                      label: 'Email Address',
-                      hint: 'Enter your Email',
-                      controller: _authController.forgetPasswordEmailController,
+                      validator:_authController.validUser ,
+                      label: 'Username',
+                      hint: 'Enter your username',
+                      controller: _authController.forgetPasswordUserController,
                     ),
                     SizedBox(height: 20),
                   ],
@@ -83,13 +83,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.1),
 
-              CustomElevationButton(
-                label: 'Confirm Mail',
-                onPress: () {
-                  if(_authController.forgetPasswordEmailFormKey.currentState!.validate()) {
-                    Get.toNamed(RoutePages.verificationCodeScreen);
-                  }
-                },
+              Obx(()=> CustomElevationButton(
+                  label: 'Confirm User Name',
+                  isLoading: _authController.isLoading.value,
+                  onPress: () {
+                    if(_authController.forgetPasswordUserFormKey.currentState!.validate()) {
+                      _authController.forgetPassword(_authController.forgetPasswordUserController.text.trim());
+                    }
+                  },
+                ),
               ),
 
               SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 16),

@@ -8,7 +8,6 @@ import '../../core/custom_widgets/custom_text_field.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 
-
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
 
@@ -17,7 +16,7 @@ class ResetPasswordScreen extends StatefulWidget {
 }
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
-final AuthController _controller= Get.put(AuthController());
+  final AuthController _controller = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
@@ -43,42 +42,46 @@ final AuthController _controller= Get.put(AuthController());
                 key: _controller.newPasswordFormKey,
                 child: Column(
                   children: [
-                    CustomTextField(
-                      obscure: _controller.newPasswordObscure.value,
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _controller.newPasswordObscure.value = !_controller.newPasswordObscure.value;
-                          });
-                        },
-                        icon: Icon(
-                          _controller.newPasswordObscure.value ? Icons.visibility_off : Icons.visibility,
+                    Obx(
+                      () => CustomTextField(
+                        obscure: _controller.newPasswordObscure.value,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            _controller.newPasswordObscure.value =
+                                !_controller.newPasswordObscure.value;
+                          },
+                          icon: Icon(
+                            _controller.newPasswordObscure.value
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
                         ),
-                      ),
 
-                      label: 'Password',
-                      hint: 'Enter new Password',
-                      controller: _controller.newPasswordController,
+                        label: 'Password',
+                        hint: 'Enter new Password',
+                        controller: _controller.newPasswordController,
+                      ),
                     ),
                     SizedBox(height: 20),
-                    CustomTextField(
-                      obscure: _controller.confirmNewPasswordObscure.value,
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _controller.confirmNewPasswordObscure.value = !_controller.confirmNewPasswordObscure.value;
-                          });
-                        },
-                        icon: Icon(
-                          _controller.confirmNewPasswordObscure.value
-                              ? Icons.visibility_off
-                              : Icons.visibility,
+                    Obx(()=>
+                        CustomTextField(
+                        obscure: _controller.confirmNewPasswordObscure.value,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            _controller.confirmNewPasswordObscure.value =
+                                !_controller.confirmNewPasswordObscure.value;
+                          },
+                          icon: Icon(
+                            _controller.confirmNewPasswordObscure.value
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
                         ),
-                      ),
 
-                      label: 'Confirm Password',
-                      hint: 'Re enter  Password',
-                      validator: _controller.validNewPassword,
+                        label: 'Confirm Password',
+                        hint: 'Re enter  Password',
+                        validator: _controller.validNewPassword,
+                      ),
                     ),
                   ],
                 ),
@@ -99,13 +102,20 @@ final AuthController _controller= Get.put(AuthController());
               ),
 
               SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-              CustomElevationButton(
-                label: 'Reset Password',
-                onPress: () {
-                  if(_controller.newPasswordFormKey.currentState!.validate()) {
-                    Get.offAllNamed(RoutePages.loginScreen);
-                  }
-                },
+              Obx(
+                () => CustomElevationButton(
+                  isLoading: _controller.isLoading.value,
+                  label: 'Reset Password',
+                  onPress: () {
+                    if (_controller.newPasswordFormKey.currentState!
+                        .validate()) {
+                      _controller.resetPassword(
+                        _controller.newPasswordController.text,
+                        Get.arguments,
+                      );
+                    }
+                  },
+                ),
               ),
               SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 16),
             ],

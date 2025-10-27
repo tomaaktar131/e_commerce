@@ -20,7 +20,7 @@ class ApiClient extends GetxService {
   static const int timeoutInSeconds = 30;
 
   static String bearerToken = "";
-
+///<==================================================Get data ===================================================>///
   static Future<Response> getData(String uri,
       {Map<String, dynamic>? query, Map<String, String>? headers}) async {
     bearerToken = await PrefsHelper.getString(AppConstants.bearerToken);
@@ -45,6 +45,7 @@ class ApiClient extends GetxService {
     }
   }
 
+  ///<================================================== Post data ===================================================>///
   static Future<Response> postData(String uri, dynamic body,
       {Map<String, String>? headers}) async {
     bearerToken = await PrefsHelper.getString(AppConstants.bearerToken);
@@ -73,6 +74,7 @@ class ApiClient extends GetxService {
     }
   }
 
+  ///<==================================================Post MultiPart  data ===================================================>///
   static Future<Response> postMultipartData(
       String uri, Map<String, String> body,
       {required List<MultipartBody> multipartBody,
@@ -97,14 +99,14 @@ class ApiClient extends GetxService {
         ));
       }
       request.fields.addAll(body);
-      http.Response _response =
+      http.Response response =
       await http.Response.fromStream(await request.send());
-      return handleResponse(_response, uri);
+      return handleResponse(response, uri);
     } catch (e) {
       return const Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
-
+  ///<================================================== Put data ===================================================>///
   Future<Response> putData(String uri, dynamic body,
       {Map<String, String>? headers}) async {
     bearerToken = await PrefsHelper.getString(AppConstants.bearerToken);
@@ -129,7 +131,7 @@ class ApiClient extends GetxService {
       return const Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
-
+  ///<================================================== Put multipart data ===================================================>///
   static Future<Response> putMultipartData(String uri, Map<String, String> body,
       {required List<MultipartBody> multipartBody,
         Map<String, String>? headers}) async {
@@ -163,7 +165,7 @@ class ApiClient extends GetxService {
       return const Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
-
+  ///<================================================== Delete data ===================================================>///
   static Future<Response> deleteData(String uri,
       {Map<String, String>? headers, dynamic body}) async {
     bearerToken = await PrefsHelper.getString(AppConstants.bearerToken);
@@ -185,7 +187,7 @@ class ApiClient extends GetxService {
       return const Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
-
+  ///<================================================== Response Handle  ===================================================>///
   static Response handleResponse(http.Response response, String uri) {
     dynamic body;
 
