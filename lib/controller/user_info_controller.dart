@@ -8,11 +8,12 @@ import '../Data/model/user_info_model.dart';
 import '../Data/service/api_checker.dart';
 import '../Data/service/api_clint.dart';
 import '../Data/service/api_constant.dart';
+import '../routes/route.dart';
 
 class UserInfoController extends GetxController {
   var isLoading = false.obs;
   /// <================================= User info  ===============================> ///
-  final formKey = GlobalKey<FormState>();
+
   final nameCtrl = TextEditingController(text: 'Md Bayzid hosen');
   final emailCtrl = TextEditingController(text: 'mdbayazid131@gmail.com');
   final phoneCtrl = TextEditingController(text: '+880 1990641482');
@@ -138,7 +139,8 @@ imagePath.value= image.path.toString();
 
       if (response.statusCode == 200) {
         Get.snackbar("Success", "Profile updated successfully!");
-        await fetchUserInfoData(); // Update view data
+        await fetchUserInfoData();
+        Get.toNamed(RoutePages.mainPage);// Update view data
       } else {
         ApiChecker.checkApi(response);
       }

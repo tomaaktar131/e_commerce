@@ -17,8 +17,11 @@ class EditAccountInformation extends StatefulWidget {
 
 class _EditAccountInformationState extends State<EditAccountInformation> {
   final _controller = Get.put(UserInfoController());
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final userInfo = _controller.userInfo.value;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -34,7 +37,7 @@ class _EditAccountInformationState extends State<EditAccountInformation> {
       body: Padding(
         padding: EdgeInsets.all(20),
         child: Form(
-          key: _controller.formKey,
+          key: _formKey,
           child: ListView(
             children: [
               Align(
@@ -42,11 +45,20 @@ class _EditAccountInformationState extends State<EditAccountInformation> {
                 child: Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    CircleAvatar(
-                      radius: 80,
-                      backgroundImage: _controller.imagePath.isNotEmpty
-                          ? FileImage(File(_controller.imagePath.toString()))
-                          : null,
+                    Obx(
+                      () => CircleAvatar(
+                        radius: 80,
+                        backgroundImage: !_controller.isLoading.value
+                            ? (userInfo?.image != null && userInfo!.image!.isNotEmpty
+                            ? NetworkImage(userInfo.image!)
+                            : null)
+                            : null,
+                        child: !_controller.isLoading.value &&
+                            (userInfo?.image != null && userInfo!.image!.isNotEmpty)
+                            ? null
+                            : const Icon(Icons.person, size: 80),
+                      ),
+
                     ),
                     Positioned(
                       bottom: -16,
@@ -88,8 +100,15 @@ class _EditAccountInformationState extends State<EditAccountInformation> {
               CustomElevationButton(
                 label: 'Save Changes',
                 onPress: () {
-                  if (_controller.formKey.currentState!.validate()) {
-                    Get.toNamed(RoutePages.mainPage);
+                  if (_formKey.currentState!.validate()) {
+                    _controller.updateUserInfo(
+                      firstName: _controller.nameCtrl.text,
+                      email: _controller.emailCtrl.text,
+                      phone: _controller.phoneCtrl.text,
+                      country: _controller.countryCtrl.text,
+                      city: _controller.cityCtrl.text,
+                      address: _controller.addressCtrl.text,
+                    );
                   }
                 },
               ),

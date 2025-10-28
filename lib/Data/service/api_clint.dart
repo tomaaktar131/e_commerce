@@ -145,7 +145,7 @@ class ApiClient extends GetxService {
       debugPrint('====> API Call: $uri\nHeader: ${headers ?? mainHeaders}');
       debugPrint('====> API Body: $body with ${multipartBody.length} picture');
       var request =
-      http.MultipartRequest('POST', Uri.parse(ApiConstant.baseUrl + uri));
+      http.MultipartRequest('PUT', Uri.parse(ApiConstant.baseUrl + uri));
       request.headers.addAll(headers ?? mainHeaders);
       for (MultipartBody element in multipartBody) {
         for (MultipartBody element in multipartBody) {

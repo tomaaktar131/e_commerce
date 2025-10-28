@@ -56,24 +56,42 @@ class _MainPageState extends State<MainPage> {
               onRefresh: () async {
                 await _controller.fetchUserInfoData();
               },
-              child: ListTile(
-                onTap: () {},
-                title: Text(
-                  userInfo!.firstName,
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                    height: 1.1,
+              child: Obx(() {
+                final user = _controller.userInfo.value;
+
+                if (_controller.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (user == null) {
+                  return const ListTile(
+                    title: Text("Loading user info..."),
+                    leading: Icon(Icons.person),
+                  );
+                }
+
+                return ListTile(
+                  onTap: () {},
+                  title: Text(
+                    user.firstName,
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
+                      height: 1.1,
+                    ),
                   ),
-                ),
-                leading: CircleAvatar(
-                  radius: 22,
-                  backgroundColor: const Color(0xffF5F6FA),
-                  backgroundImage: _controller.imagePath.isNotEmpty
-                      ? FileImage(File(_controller.imagePath.toString()))
-                      : null,
-                ),
-              ),
+                  leading: CircleAvatar(
+                    radius: 22,
+                    backgroundImage:
+                        (user.image != null && user.image!.isNotEmpty)
+                        ? NetworkImage(user.image!)
+                        : null,
+                    child: (user.image == null || user.image!.isEmpty)
+                        ? const Icon(Icons.person, size: 30)
+                        : null,
+                  ),
+                );
+              }),
             ),
             ListTile(
               onTap: () {

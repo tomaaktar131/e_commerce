@@ -20,7 +20,6 @@ class _AccountInformationState extends State<AccountInformation> {
   final _controller = Get.put(UserInfoController());
   @override
   Widget build(BuildContext context) {
-    final userInfo = _controller.userInfo.value;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -40,36 +39,54 @@ class _AccountInformationState extends State<AccountInformation> {
           children: [
             Align(
               alignment: Alignment.center,
-              child: CircleAvatar(
-                radius: 80,
-                backgroundImage:_controller.imagePath.isNotEmpty
-                    ? FileImage(File(_controller.imagePath.toString()))
-                    : null,
-              ),
+              child: Obx(() {
+                final userInfo = _controller.userInfo.value;
+                return CircleAvatar(
+                  radius: 80,
+                  backgroundImage: !_controller.isLoading.value
+                      ? (userInfo?.image != null && userInfo!.image!.isNotEmpty
+                                ? NetworkImage(userInfo.image!)
+                                : null)
+                            as ImageProvider?
+                      : null, // No background image while loading
+                  child:
+                      (_controller.isLoading.value ||
+                          userInfo?.image == null ||
+                          userInfo!.image!.isEmpty)
+                      ? Icon(Icons.person, size: 80, color: AppColor.grayColor)
+                      : null, // No child when image is present
+                );
+              }),
             ),
+            SizedBox(height: 20),
+            Obx(() {
+              final userInfo = _controller.userInfo.value;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _infoRow('Name', userInfo?.firstName ?? ''),
+                  SizedBox(height: 10),
+                  _infoRow('Email', userInfo?.email ?? ''),
+                  SizedBox(height: 10),
+                  _infoRow('Phone Number', userInfo?.phone ?? ''),
 
-            _infoRow('Name',userInfo!.firstName),
-            SizedBox(height: 10,),
-            _infoRow('Email',userInfo.email),
-            SizedBox(height: 10,),
-            _infoRow('Phone Number',userInfo.phone ?? ''),
-            SizedBox(height: 10,),
-            _infoRow('Country',userInfo.country ?? ""),
-            SizedBox(height: 10,),
-            _infoRow('City',userInfo.city ?? ""),
-            SizedBox(height: 10,),
-            _infoRow('Address',userInfo.address ?? ""),
-            SizedBox(height: 25,),
-
-
+                  SizedBox(height: 10),
+                  _infoRow('Country', userInfo?.country ?? ""),
+                  SizedBox(height: 10),
+                  _infoRow('City', userInfo?.city ?? ""),
+                  SizedBox(height: 10),
+                  _infoRow('Address', userInfo?.address ?? ""),
+                  SizedBox(height: 25),
+                ],
+              );
+            }),
             ElevatedButton(
-
               onPressed: () {
                 Get.toNamed(RoutePages.editAccountInformation);
               },
 
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity,55),
+                minimumSize: Size(double.infinity, 55),
                 backgroundColor: Color(0xffFEFEFE),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadiusGeometry.circular(10),
@@ -79,8 +96,8 @@ class _AccountInformationState extends State<AccountInformation> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset('assets/icons/edit_pen_icon.svg',),
-                  Text(' Edit',style: TextStyle(color: AppColor.primaryColor),),
+                  SvgPicture.asset('assets/icons/edit_pen_icon.svg'),
+                  Text(' Edit', style: TextStyle(color: AppColor.primaryColor)),
                 ],
               ),
             ),
@@ -92,30 +109,30 @@ class _AccountInformationState extends State<AccountInformation> {
 
   Widget _infoRow(String label, String value) {
     return Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    color: AppColor.grayColor,
-                    height: 1.1,
-                  ),
-                ),
-                SizedBox(height: 8,),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18,
-                    height: 1.1,
-                    color: Color(0xff1D1E20),
-                  ),
-                ),
-              ],
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeight.w400,
+              color: AppColor.grayColor,
+              height: 1.1,
             ),
-          );
+          ),
+          SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 18,
+              height: 1.1,
+              color: Color(0xff1D1E20),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

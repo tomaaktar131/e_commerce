@@ -2,13 +2,16 @@ import 'package:e_commerce_project/routes/route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'controller/main_page_controller.dart';
 import 'controller/user_info_controller.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Controller এখানে initialize করো
-  Get.put(UserInfoController());
+  final userInfoController = Get.put(UserInfoController());
+  await userInfoController.fetchUserInfoData(); // wait until user info loaded ✅
+
+  Get.put(MainPageController());
 
   runApp(const MyApp());
 }
