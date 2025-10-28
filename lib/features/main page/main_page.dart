@@ -23,8 +23,11 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final _controller = Get.put(UserInfoController());
   final _mainPageController = Get.put(MainPageController());
+
   @override
   Widget build(BuildContext context) {
+    final userInfo = _controller.userInfo.value;
+
     return Scaffold(
       key: scaffoldKey,
       drawer: Drawer(
@@ -49,22 +52,27 @@ class _MainPageState extends State<MainPage> {
             ),
 
             SizedBox(height: 40),
-            ListTile(
-              onTap: () {},
-              title: Text(
-                _controller.nameCtrl.text,
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
-                  height: 1.1,
+            RefreshIndicator(
+              onRefresh: () async {
+                await _controller.fetchUserInfoData();
+              },
+              child: ListTile(
+                onTap: () {},
+                title: Text(
+                  userInfo!.firstName,
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                    height: 1.1,
+                  ),
                 ),
-              ),
-              leading: CircleAvatar(
-                radius: 22,
-                backgroundColor: const Color(0xffF5F6FA),
-                backgroundImage: _controller.imagePath.isNotEmpty
-                    ? FileImage(File(_controller.imagePath.toString()))
-                    : null,
+                leading: CircleAvatar(
+                  radius: 22,
+                  backgroundColor: const Color(0xffF5F6FA),
+                  backgroundImage: _controller.imagePath.isNotEmpty
+                      ? FileImage(File(_controller.imagePath.toString()))
+                      : null,
+                ),
               ),
             ),
             ListTile(
@@ -137,7 +145,6 @@ class _MainPageState extends State<MainPage> {
             Spacer(),
             ListTile(
               onTap: () {
-
                 Get.bottomSheet(
                   Container(
                     height: 300,
@@ -192,8 +199,10 @@ class _MainPageState extends State<MainPage> {
                                     ),
                                   ),
                                 ),
-                                onPressed: () async{
-                                  await PrefsHelper.remove(AppConstants.bearerToken);
+                                onPressed: () async {
+                                  await PrefsHelper.remove(
+                                    AppConstants.bearerToken,
+                                  );
                                   Get.offAllNamed(RoutePages.loginScreen);
                                 },
                                 child: Text(
@@ -224,7 +233,6 @@ class _MainPageState extends State<MainPage> {
                 );
               },
               title: Text(
-
                 'Logout ',
                 style: TextStyle(
                   fontSize: 15,
@@ -241,7 +249,9 @@ class _MainPageState extends State<MainPage> {
           ],
         ),
       ),
-      body:Obx(()=> _mainPageController.pages[_mainPageController.currentIndex.value],),
+      body: Obx(
+        () => _mainPageController.pages[_mainPageController.currentIndex.value],
+      ),
 
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(

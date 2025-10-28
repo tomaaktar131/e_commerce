@@ -3,6 +3,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
+import '../../Data/service/api_constant.dart';
 import '../../controller/home_page_controller.dart';
 import '../../routes/route.dart';
 
@@ -128,17 +129,25 @@ class _WishlistPageState extends State<WishlistPage> {
                               GestureDetector(
                                 onTap: () {
                                   Get.toNamed(
-                                    RoutePages.productDetails,
-                                  );_controller.setSelectedProduct(product);
+                                    RoutePages.productDetails);
+                                  _controller.setSelectedProduct(product as Map<String, dynamic>);
                                 },
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(15),
 
-                                  child: Image(
+                                  child:Image(
                                     height: 203,
                                     width: double.infinity,
-                                    image: AssetImage(product["imagePath_1"]),
+                                    image: NetworkImage(
+                                      "${ApiConstant.baseUrl}${product.images[0]}",
+                                    ),
                                     fit: BoxFit.cover,
+                                    errorBuilder:  (context, error, stackTrace) {
+                                      return Image.asset(
+                                        'assets/images/no-image-available.jpg',
+                                        fit: BoxFit.cover,
+                                      );
+                                    },
                                   ),
                                 ),
                               ),
@@ -172,11 +181,11 @@ class _WishlistPageState extends State<WishlistPage> {
                           GestureDetector(
                             onTap: () {
                               Get.toNamed(
-                                RoutePages.productDetails,
-                              );_controller.setSelectedProduct(product);
+                                RoutePages.productDetails);
+                              _controller.setSelectedProduct(product as Map<String, dynamic>);
                             },
                             child: Text(
-                              product["productTitle"],
+                              product.name,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: TextStyle(
@@ -189,7 +198,7 @@ class _WishlistPageState extends State<WishlistPage> {
                           ),
                           SizedBox(height: 5),
                           Text(
-                            '\$${product["price"]}',
+                            '\$${product.price}',
                             style: TextStyle(
                               color: Color(0xff1D1E20),
                               fontSize: 13,

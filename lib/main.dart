@@ -1,8 +1,15 @@
 import 'package:e_commerce_project/routes/route.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get/get.dart';
 
-void main() {
+import 'controller/user_info_controller.dart';
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Controller এখানে initialize করো
+  Get.put(UserInfoController());
+
   runApp(const MyApp());
 }
 

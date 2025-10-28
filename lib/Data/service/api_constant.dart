@@ -10,5 +10,15 @@ class ApiConstant{
   static String otoVerify(String userName)=>"/auth/vefiry_for_forget/$userName/";
   static String resetPassword="/auth/reset_password/";
 
+  static String productDataEndPoint = "/shoping/products/";
+  static String brandDataEndPoint = "/shoping/brands/";
+
+
+  static String userInfoEndPoint = "/auth/profile/";
+
+
+
+  static String singleProduct="/shoping/products/8";
+
 
 }

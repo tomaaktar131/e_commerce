@@ -1,3 +1,4 @@
+import 'package:e_commerce_project/Data/service/api_constant.dart';
 import 'package:e_commerce_project/core/theme/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -10,21 +11,22 @@ import '../../routes/route.dart';
 import '../main page/main_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({
-    super.key,
-
-  });
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    _controller.fetchProductData();
+    super.initState();
+  }
 
-final _controller =Get.put(HomePageController());
+  final _controller = Get.put(HomePageController());
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFFEFEFE),
@@ -46,12 +48,13 @@ final _controller =Get.put(HomePageController());
           ),
         ),
 
-
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20),
             child: GestureDetector(
-              onTap: () {Get.toNamed(RoutePages.cartPage);},
+              onTap: () {
+                Get.toNamed(RoutePages.cartPage);
+              },
               child: CircleAvatar(
                 backgroundColor: const Color(0xffF5F6FA),
                 child: SvgPicture.asset(
@@ -88,7 +91,7 @@ final _controller =Get.put(HomePageController());
                     children: [
                       Expanded(
                         child: TextFormField(
-                           controller: _controller.searchController,
+                          controller: _controller.searchController,
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: 15,
@@ -140,7 +143,9 @@ final _controller =Get.put(HomePageController());
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {Get.toNamed( RoutePages.viewAllBrands);},
+                        onTap: () {
+                          Get.toNamed(RoutePages.viewAllBrands);
+                        },
                         child: Text(
                           'View All',
                           style: TextStyle(
@@ -200,94 +205,101 @@ final _controller =Get.put(HomePageController());
                   ),
                   const SizedBox(height: 15),
 
-                  MasonryGridView.count(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: _controller.products.length,
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
+                  Obx(()=> MasonryGridView.count(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: _controller.products.length,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
 
-                    itemBuilder: (context, index) {
-                      final product = _controller.products[index];
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Stack(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Get.toNamed(
-                                    RoutePages.productDetails,
+                      itemBuilder: (context, index) {
+                        final product = _controller.products[index];
+                        return _controller.isLoading.value
+                            ? Center(child: CircularProgressIndicator())
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Stack(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          Get.toNamed(RoutePages.productDetails);
+                                        },
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(15),
 
-                                  );
-                                  _controller.setSelectedProduct(product);
-                                },
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
-
-                                  child: Image(
-                                    height: 203,
-                                    width: double.infinity,
-                                    image: AssetImage(product["imagePath_1"]),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-
-                              Obx(()=>
-                                 Positioned(
-                                  top: 10,
-                                  right: 10,
-                                  child: IconButton(
-                                    onPressed: () => _controller.toggleFavourite(product),
-                                    icon: _controller.favouriteProducts.contains(product)
-                                        ? Icon(
-                                            Icons.favorite_rounded,
-                                            color: Colors.red,
-                                            size: 20,
-                                          )
-                                        : SvgPicture.asset(
-                                            'assets/icons/favourite_icon.svg',
+                                          child: Image(
+                                            height: 203,
+                                            width: double.infinity,
+                                            image: NetworkImage(
+                                              "${ApiConstant.baseUrl}${product.images[0]}",
+                                            ),
+                                            fit: BoxFit.cover,
+                                            errorBuilder:  (context, error, stackTrace) {
+                                              return Image.asset(
+                                                'assets/images/no-image-available.jpg',
+                                                fit: BoxFit.cover,
+                                              );
+                                            },
                                           ),
+                                        ),
+                                      ),
+
+                                      Obx(
+                                        () => Positioned(
+                                          top: 10,
+                                          right: 10,
+                                          child: IconButton(
+                                            onPressed: () => _controller
+                                                .toggleFavourite(product),
+                                            icon:
+                                                _controller.favouriteProducts
+                                                    .contains(product)
+                                                ? Icon(
+                                                    Icons.favorite_rounded,
+                                                    color: Colors.red,
+                                                    size: 20,
+                                                  )
+                                                : SvgPicture.asset(
+                                                    'assets/icons/favourite_icon.svg',
+                                                  ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
 
-                          GestureDetector(
-                            onTap: () {
-                              Get.toNamed(
-                                RoutePages.productDetails,
-
-                              );_controller.setSelectedProduct(product);
-                            },
-                            child: Text(
-                              product["productTitle"],
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: TextStyle(
-                                color: Color(0xff1D1E20),
-                                fontWeight: FontWeight.w500,
-                                fontSize: 13,
-                                height: 1.3,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            '\$${product["price"]}',
-                            style: TextStyle(
-                              color: Color(0xff1D1E20),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      );
-                    },
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.toNamed(RoutePages.productDetails);
+                                    },
+                                    child: Text(
+                                      product.name,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        color: Color(0xff1D1E20),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 13,
+                                        height: 1.3,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    '\$${product.price}',
+                                    style: TextStyle(
+                                      color: Color(0xff1D1E20),
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              );
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -297,8 +309,4 @@ final _controller =Get.put(HomePageController());
       ),
     );
   }
-
-
-
-
 }

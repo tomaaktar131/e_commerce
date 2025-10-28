@@ -20,6 +20,7 @@ class _AccountInformationState extends State<AccountInformation> {
   final _controller = Get.put(UserInfoController());
   @override
   Widget build(BuildContext context) {
+    final userInfo = _controller.userInfo.value;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -47,17 +48,17 @@ class _AccountInformationState extends State<AccountInformation> {
               ),
             ),
 
-            _infoRow('Name',_controller.nameCtrl.text),
+            _infoRow('Name',userInfo!.firstName),
             SizedBox(height: 10,),
-            _infoRow('Email',_controller.emailCtrl.text),
+            _infoRow('Email',userInfo.email),
             SizedBox(height: 10,),
-            _infoRow('Phone Number',_controller.phoneCtrl.text),
+            _infoRow('Phone Number',userInfo.phone ?? ''),
             SizedBox(height: 10,),
-            _infoRow('Country',_controller.countryCtrl.text),
+            _infoRow('Country',userInfo.country ?? ""),
             SizedBox(height: 10,),
-            _infoRow('City',_controller.cityCtrl.text),
+            _infoRow('City',userInfo.city ?? ""),
             SizedBox(height: 10,),
-            _infoRow('Address',_controller.addressCtrl.text),
+            _infoRow('Address',userInfo.address ?? ""),
             SizedBox(height: 25,),
 
 
