@@ -134,7 +134,7 @@ class _ViewAllProductState extends State<ViewAllProduct> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Get.toNamed(RoutePages.productDetails);
+                      Get.toNamed(RoutePages.productDetails,arguments: product);
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),

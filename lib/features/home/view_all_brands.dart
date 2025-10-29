@@ -38,7 +38,7 @@ class _ViewAllBrandsState extends State<ViewAllBrands> {
                             onTap: () {
                               Get.toNamed(
                                 RoutePages.chooseBrandPage,
-                                // arguments: [brandName, brandLogo],
+                                arguments: [brandName, brandLogo],
                               );
                             },
                             child: Container(

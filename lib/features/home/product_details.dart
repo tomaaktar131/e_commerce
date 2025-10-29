@@ -1,3 +1,4 @@
+import 'package:e_commerce_project/Data/service/api_constant.dart';
 import 'package:e_commerce_project/core/theme/app_colors.dart';
 import 'package:e_commerce_project/routes/route.dart';
 import 'package:flutter/gestures.dart';
@@ -5,10 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-import '../../controller/cart_controller.dart';
+import '../../Data/model/product_model.dart';
 import '../../controller/home_page_controller.dart';
 import '../../core/custom_widgets/custom_elevated_button.dart';
-import 'all_review_page.dart';
 
 class ProductDetails extends StatefulWidget {
   const ProductDetails({super.key});
@@ -18,14 +18,11 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
-  final _controller =Get.find<HomePageController>();
-  final _cartController =Get.find<CartController>();
-
-
-
+  final _controller = Get.find<HomePageController>();
   @override
   Widget build(BuildContext context) {
-    final product=_controller.selectedProduct;
+    final ProductData product = Get.arguments;
+    final controller = Get.find<HomePageController>();
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -39,13 +36,29 @@ class _ProductDetailsState extends State<ProductDetails> {
                     child: SizedBox(
                       height: MediaQuery.of(context).size.height * 0.45,
                       child: Obx(
-                        () => Image.asset(
-                          product["imagePath_${_controller.selectedIndex.value + 1}"],
-                          fit: BoxFit.fitHeight,
+                        () => ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: (product.images.isNotEmpty &&
+                                  _controller.selectedIndex.value <
+                                      product.images.length)
+                              ? Image.network(
+                                  "${ApiConstant.baseUrl}${product.images[_controller.selectedIndex.value]}",
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Image.asset(
+                                    'assets/images/no-image-available.jpg',
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : Image.asset(
+                              'assets/images/no-image-available.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
@@ -56,7 +69,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           children: [
                             Expanded(
                               child: Text(
-                                product["category"],
+                                "${product.category}",
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w400,
@@ -82,7 +95,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           children: [
                             Expanded(
                               child: Text(
-                                product["productTitle"],
+                                product.name,
                                 style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w600,
@@ -94,7 +107,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               ),
                             ),
                             Text(
-                              "\$${product['price']}",
+                              "\$${product.price}",
                               style: TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w600,
@@ -107,88 +120,38 @@ class _ProductDetailsState extends State<ProductDetails> {
                         SizedBox(height: 21),
                         SizedBox(
                           height: 77,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  _controller.selectedIndex.value = 0;
-                                },
-                                child: Container(
-                                  height: 77,
-                                  width: 77,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: product.images.length,
+                            itemBuilder: (context, index) {
+                              final imageUrl = "${ApiConstant.baseUrl}${product.images[index]}";
+                              return InkWell(onTap: () {
+                                  _controller.selectedIndex.value= index;
+
+                              },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: Image.asset(
-                                      product["imagePath_1"],
-                                      fit: BoxFit.fitWidth,
+                                    child: Image.network(
+                                      imageUrl,
+                                      width: 77,
+                                      height: 77,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) => Image.asset(
+                                        'assets/images/no-image-available.jpg',
+                                        width: 77,
+                                        height: 77,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  _controller.selectedIndex.value = 1;
-                                },
-                                child: Container(
-                                  height: 77,
-                                  width: 77,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.asset(
-                                      product["imagePath_2"],
-                                      fit: BoxFit.fitWidth,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  _controller.selectedIndex.value = 2;
-                                },
-                                child: Container(
-                                  height: 77,
-                                  width: 77,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.asset(
-                                      product["imagePath_3"],
-                                      fit: BoxFit.fitWidth,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  _controller.selectedIndex.value = 3;
-                                },
-                                child: Container(
-                                  height: 77,
-                                  width: 77,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.asset(
-                                      product["imagePath_4"],
-                                      fit: BoxFit.fitWidth,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
                         ),
+
                         SizedBox(height: 15),
                         Row(
                           children: [
@@ -221,7 +184,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
                                 onTap: () {
-                                  _controller.selectSize(index, product);
+                                  controller.selectSize(index, product);
                                 },
                                 child: Obx(
                                   () => Container(
@@ -230,11 +193,18 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     decoration: BoxDecoration(
                                       color: const Color(0xffF5F6FA),
                                       borderRadius: BorderRadius.circular(10),
-                                      border: _controller.selectedSizeIndex.value == index ? Border.all(color: AppColor.primaryColor, width: 1) : null,
+                                      border:
+                                          controller.selectedSizeIndex.value ==
+                                              index
+                                          ? Border.all(
+                                              color: AppColor.primaryColor,
+                                              width: 1,
+                                            )
+                                          : null,
                                     ),
                                     child: Center(
                                       child: Text(
-                                        product["size"][index],
+                                        product.sizes![index],
                                         style: const TextStyle(
                                           fontSize: 17,
                                           fontWeight: FontWeight.w600,
@@ -249,8 +219,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                             },
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
-                            separatorBuilder: (BuildContext context, int index) => const SizedBox(width: 9),
-                            itemCount: product["size"].length,
+                            separatorBuilder:
+                                (BuildContext context, int index) =>
+                                    const SizedBox(width: 9),
+                            itemCount: product.sizes!.length,
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -268,8 +240,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ),
 
                         const SizedBox(height: 10),
-                        Obx(
-                          () => RichText(
+                        Obx(() {
+                          final description = product.description ?? '';
+                          final isLongText = description.length > 120;
+                          final displayText = controller.isExpanded.value || !isLongText
+                              ? description
+                              : '${description.substring(0, 120)}... ';
+
+                          return RichText(
                             text: TextSpan(
                               style: TextStyle(
                                 color: Colors.grey[700],
@@ -277,29 +255,24 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 height: 1.4,
                               ),
                               children: <TextSpan>[
-                                TextSpan(
-                                  text: _controller.isExpanded.value
-                                      ? product["description"]
-                                      : "${product["description"].substring(0, 150)}... ",
-                                ),
-                                TextSpan(
-                                  text: _controller.isExpanded.value
-                                      ? " Read Less"
-                                      : "Read More",
-                                  style: const TextStyle(
-                                    color: Color(0xff1D1E20),
-                                    fontWeight: FontWeight.w600,
+                                TextSpan(text: displayText),
+                                if (isLongText)
+                                  TextSpan(
+                                    text: controller.isExpanded.value ? ' Read Less' : ' Read More',
+                                    style: const TextStyle(
+                                      color: Color(0xff1D1E20),
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        controller.isExpanded.value = !controller.isExpanded.value;
+                                      },
                                   ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      _controller.isExpanded.value =
-                                          !_controller.isExpanded.value;
-                                    },
-                                ),
                               ],
                             ),
-                          ),
-                        ),
+                          );
+                        }),
+
                         SizedBox(height: 15),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -335,7 +308,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           shrinkWrap: true,
                           itemCount: 1,
                           itemBuilder: (context, index) {
-                            final review = _controller.reviews[index];
+                            final review = controller.reviews[index];
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -415,15 +388,18 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         ),
                                         const SizedBox(height: 5),
                                         Row(
-                                          children: List.generate(5, (starIndex) {
-                                            double rating = (review['rating'] as num)
-                                                .toDouble();
+                                          children: List.generate(5, (
+                                            starIndex,
+                                          ) {
+                                            double rating =
+                                                (review['rating'] as num)
+                                                    .toDouble();
                                             return Icon(
                                               starIndex < rating.floor()
                                                   ? Icons.star
                                                   : (starIndex < rating
-                                                  ? Icons.star_half
-                                                  : Icons.star_border),
+                                                        ? Icons.star_half
+                                                        : Icons.star_border),
                                               color: Colors.orange.shade400,
                                               size: 15,
                                             );
@@ -542,7 +518,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 Column(
                   children: [
                     Text(
-                      " \$${product["price"]}",
+                      " \$${product.price}",
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
@@ -555,9 +531,12 @@ class _ProductDetailsState extends State<ProductDetails> {
             ),
             SizedBox(height: 20),
 
-            CustomElevationButton(label: 'Add to Cart ', onPress: () {
-               _cartController.addToCart(_controller.selectedProduct.value);
-            }),
+            CustomElevationButton(
+              label: 'Add to Cart ',
+              onPress: () {
+                // _cartController.addToCart(_controller.selectedProduct.value);
+              },
+            ),
           ],
         ),
       ),

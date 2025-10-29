@@ -129,8 +129,7 @@ class _WishlistPageState extends State<WishlistPage> {
                               GestureDetector(
                                 onTap: () {
                                   Get.toNamed(
-                                    RoutePages.productDetails);
-                                  _controller.setSelectedProduct(product as Map<String, dynamic>);
+                                    RoutePages.productDetails,arguments: product);
                                 },
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(15),
@@ -181,8 +180,8 @@ class _WishlistPageState extends State<WishlistPage> {
                           GestureDetector(
                             onTap: () {
                               Get.toNamed(
-                                RoutePages.productDetails);
-                              _controller.setSelectedProduct(product as Map<String, dynamic>);
+                                RoutePages.productDetails,arguments: product);
+
                             },
                             child: Text(
                               product.name,

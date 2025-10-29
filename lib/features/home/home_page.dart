@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import '../../Data/model/product_model.dart';
 import '../../controller/home_page_controller.dart';
 import '../../core/custom_widgets/brand_logo_widget.dart';
 import '../../core/theme/app_colors.dart';
@@ -226,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          Get.toNamed(RoutePages.productDetails);
+                                          Get.toNamed(RoutePages.productDetails,arguments: product);
                                         },
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(15),
@@ -274,7 +275,7 @@ class _HomePageState extends State<HomePage> {
 
                                   GestureDetector(
                                     onTap: () {
-                                      Get.toNamed(RoutePages.productDetails);
+                                      Get.toNamed(RoutePages.productDetails,arguments: product);
                                     },
                                     child: Text(
                                       product.name,

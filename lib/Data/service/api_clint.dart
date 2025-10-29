@@ -107,7 +107,7 @@ class ApiClient extends GetxService {
     }
   }
   ///<================================================== Put data ===================================================>///
-  Future<Response> putData(String uri, dynamic body,
+ static Future<Response> putData(String uri, dynamic body,
       {Map<String, String>? headers}) async {
     bearerToken = await PrefsHelper.getString(AppConstants.bearerToken);
 
@@ -158,9 +158,9 @@ class ApiClient extends GetxService {
 
       request.fields.addAll(body);
 
-      http.Response _response =
+      http.Response response =
       await http.Response.fromStream(await request.send());
-      return handleResponse(_response, uri);
+      return handleResponse(response, uri);
     } catch (e) {
       return const Response(statusCode: 1, statusText: noInternetMessage);
     }
