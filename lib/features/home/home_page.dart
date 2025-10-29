@@ -19,12 +19,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
-  void initState() {
+  void initState(){
     _controller.fetchProductData();
     super.initState();
   }
 
-  final _controller = Get.put(HomePageController());
+  final _controller = Get.find<HomePageController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

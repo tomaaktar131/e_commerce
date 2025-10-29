@@ -16,7 +16,7 @@ class AddReviewPage extends StatefulWidget {
 final _fromKey = GlobalKey<FormState>();
 
 class _AddReviewPageState extends State<AddReviewPage> {
-final _controller=Get.put(HomePageController());
+  final _controller =Get.find<HomePageController>();
 
   @override
   Widget build(BuildContext context) {

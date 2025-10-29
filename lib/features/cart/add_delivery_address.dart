@@ -14,7 +14,8 @@ class AddDeliveryAddress extends StatefulWidget {
 }
 
 class _AddDeliveryAddressState extends State<AddDeliveryAddress> {
-final _controller =Get.put(CartController());
+final _controller =Get.find<CartController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

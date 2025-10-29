@@ -12,40 +12,41 @@ import '../routes/route.dart';
 
 class UserInfoController extends GetxController {
   var isLoading = false.obs;
+
   /// <================================= User info  ===============================> ///
+  final nameCtrl = TextEditingController();
+  final emailCtrl = TextEditingController();
+  final phoneCtrl = TextEditingController();
+  final countryCtrl = TextEditingController();
+  final cityCtrl = TextEditingController();
+  final addressCtrl = TextEditingController();
 
-  final nameCtrl = TextEditingController(text: 'Md Bayzid hosen');
-  final emailCtrl = TextEditingController(text: 'mdbayazid131@gmail.com');
-  final phoneCtrl = TextEditingController(text: '+880 1990641482');
-  final countryCtrl = TextEditingController(text: 'Bangladesh');
-  final cityCtrl = TextEditingController(text: 'Faridpur');
-  final addressCtrl = TextEditingController(text: 'Faridpur sador, Faridpur');
-
-  RxString imagePath=''.obs;
-Future getImage() async {
- final ImagePicker picker = ImagePicker();
- final image= await picker.pickImage(source: ImageSource.gallery);
-
- if(image != null){
-imagePath.value= image.path.toString();
- }
-}
-
-  // RxList<UserInfoModel> userInfo = RxList<UserInfoModel>();
+   RxString imagePath = ''.obs;
+  // Future getImage() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final image = await picker.pickImage(source: ImageSource.gallery);
+  //   print("========================================");
+  //   print(imagePath.value);
+  //   if (image != null) {
+  //     imagePath.value = image.path.toString();
   //
-  // Future<void> fetchUserInfoData() async {
-  //   isLoading(true);
-  //
-  //   final response = await ApiClient.getData(ApiConstant.userInfoEndPoint);
-  //   if (response.statusCode == 200) {
-  //     List<dynamic> data = response.body['data'];
-  //     userInfo.value =
-  //         data.map((json) => UserInfoModel.fromJson(json)).toList();
-  //   } else {
-  //     ApiChecker.checkApi(response);
   //   }
-  //   isLoading(false);
   // }
+
+
+  Future<void> getImage() async {
+    final ImagePicker picker = ImagePicker();
+    final image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      imagePath.value = image.path; // reactive variable update
+      print("===========================================Selected image path: ${imagePath.value}"); // console print
+    } else {
+      print("================================No image selected");
+    }
+  }
+
+
 
   @override
   void onInit() {
@@ -55,7 +56,7 @@ imagePath.value= image.path.toString();
 
   Rxn<UserInfoModel> userInfo = Rxn<UserInfoModel>();
 
-  Future<void> fetchUserInfoData() async {
+  Future<void> fetchUserInfoData({bool updateControllers = false}) async {
     isLoading(true);
 
     final response = await ApiClient.getData(ApiConstant.userInfoEndPoint);
@@ -63,6 +64,15 @@ imagePath.value= image.path.toString();
     if (response.statusCode == 200) {
       var data = response.body['data'];
       userInfo.value = UserInfoModel.fromJson(data);
+
+      if (updateControllers) {
+        nameCtrl.text = userInfo.value?.firstName ?? '';
+        emailCtrl.text = userInfo.value?.email ?? '';
+        phoneCtrl.text = userInfo.value?.phone ?? '';
+        countryCtrl.text = userInfo.value?.country ?? '';
+        cityCtrl.text = userInfo.value?.city ?? '';
+        addressCtrl.text = userInfo.value?.address ?? '';
+      }
     } else {
       ApiChecker.checkApi(response);
     }
@@ -70,42 +80,8 @@ imagePath.value= image.path.toString();
     isLoading(false);
   }
 
-  // Future<void> updateUserInfo({
-  //   required String firstName,
-  //   required String email,
-  //   required String phone,
-  //   required String country,
-  //   required String city,
-  //   required String address,
-  // }) async {
-  //   isLoading(true);
-  //
-  //   final body = {
-  //     "first_name": firstName,
-  //     "email": email,
-  //     "phone": phone,
-  //     "country": country,
-  //     "city": city,
-  //     "address": address,
-  //   };
-  //
-  //   final response = await ApiClient.putMultipartData( ApiConstant.userInfoEndPoint, multipartBody: [
-  //
-  //   ];
-  //
-  //   if (response.statusCode == 200) {
-  //     await fetchUserInfoData();
-  //     Get.snackbar("Success", "Profile updated successfully!");
-  //   } else {
-  //     ApiChecker.checkApi(response);
-  //   }
-  //
-  //   isLoading(false);
-  // }
-
   Future<void> updateUserInfo({
     required String firstName,
-    required String email,
     required String phone,
     required String country,
     required String city,
@@ -117,7 +93,6 @@ imagePath.value= image.path.toString();
     try {
       final body = {
         "first_name": firstName,
-        "email": email,
         "phone": phone,
         "country": country,
         "city": city,
@@ -126,7 +101,6 @@ imagePath.value= image.path.toString();
 
       List<MultipartBody> multipartList = [];
 
-      // যদি ছবি থাকে, তাহলে multipartList এ দাও
       if (imageFile != null) {
         multipartList.add(MultipartBody('image', imageFile));
       }
@@ -140,7 +114,7 @@ imagePath.value= image.path.toString();
       if (response.statusCode == 200) {
         Get.snackbar("Success", "Profile updated successfully!");
         await fetchUserInfoData();
-        Get.toNamed(RoutePages.mainPage);// Update view data
+        Get.toNamed(RoutePages.mainPage); // Update view data
       } else {
         ApiChecker.checkApi(response);
       }
@@ -150,9 +124,4 @@ imagePath.value= image.path.toString();
       isLoading(false);
     }
   }
-
-
-
-
-
 }

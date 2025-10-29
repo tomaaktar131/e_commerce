@@ -16,7 +16,8 @@ class MyCards extends StatefulWidget {
 
 class _MyCardsState extends State<MyCards> {
 
-  final _controller = Get.put(MyCardsController());
+  final _controller =Get.find<MyCardsController>();
+
 
   @override
   Widget build(BuildContext context) {

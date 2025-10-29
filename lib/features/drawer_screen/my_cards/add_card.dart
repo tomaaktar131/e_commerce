@@ -16,7 +16,8 @@ class AddCard extends StatefulWidget {
 
 class _AddCardState extends State<AddCard> {
  //  0 = Mastercard, 1 = PayPal, 2 = Bank
-  final _controller = Get.put(MyCardsController());
+  final _controller =Get.find<MyCardsController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

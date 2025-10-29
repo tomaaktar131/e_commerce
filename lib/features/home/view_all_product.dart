@@ -15,7 +15,8 @@ class ViewAllProduct extends StatefulWidget {
 }
 
 class _ViewAllProductState extends State<ViewAllProduct> {
-  final _controller = Get.put(HomePageController());
+  final _controller =Get.find<HomePageController>();
+
   @override
   void initState() {
     _controller.fetchProductData();

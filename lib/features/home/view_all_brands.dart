@@ -14,7 +14,8 @@ class ViewAllBrands extends StatefulWidget {
 }
 
 class _ViewAllBrandsState extends State<ViewAllBrands> {
-  final _controller = Get.put(HomePageController());
+  final _controller =Get.find<HomePageController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

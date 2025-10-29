@@ -18,8 +18,8 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
-  final _controller = Get.put(HomePageController());
-  final _cartController = Get.put(CartController());
+  final _controller =Get.find<HomePageController>();
+  final _cartController =Get.find<CartController>();
 
 
 

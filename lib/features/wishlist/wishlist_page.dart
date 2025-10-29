@@ -15,7 +15,7 @@ class WishlistPage extends StatefulWidget {
 }
 
 class _WishlistPageState extends State<WishlistPage> {
-  final _controller = Get.put(HomePageController());
+  final _controller =Get.find<HomePageController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

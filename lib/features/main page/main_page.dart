@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../Data/helpers/prefs_helper.dart';
+import '../../Data/service/api_constant.dart';
 import '../../Data/utils/app_constants.dart';
 import '../../controller/main_page_controller.dart';
 import '../../controller/user_info_controller.dart';
 import '../../core/custom_widgets/custom_elevated_button.dart';
 import '../../routes/route.dart';
+import '../home/home_page.dart';
 
 GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -21,12 +23,10 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final _controller = Get.put(UserInfoController());
-  final _mainPageController = Get.put(MainPageController());
-
+  final _controller = Get.find<UserInfoController>();
+  final _mainPageController =Get.find<MainPageController>();
   @override
   Widget build(BuildContext context) {
-    final userInfo = _controller.userInfo.value;
 
     return Scaffold(
       key: scaffoldKey,
@@ -50,46 +50,61 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
             ),
-
             SizedBox(height: 40),
             RefreshIndicator(
               onRefresh: () async {
                 await _controller.fetchUserInfoData();
               },
               child: Obx(() {
-                final user = _controller.userInfo.value;
+                final userInfo = _controller.userInfo.value;
 
-                if (_controller.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (user == null) {
-                  return const ListTile(
-                    title: Text("Loading user info..."),
-                    leading: Icon(Icons.person),
-                  );
-                }
+                // if (_controller.isLoading.value) {
+                //   return const Center(child: CircularProgressIndicator());
+                // }
+                //
+                // if (userInfo == null) {
+                //   return const ListTile(
+                //     title: Text("Loading user info..."),
+                //     leading: Icon(Icons.person),
+                //   );
+                // }
 
                 return ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed(RoutePages.accountInformation);
+                  },
                   title: Text(
-                    user.firstName,
+                    userInfo!.firstName,
                     style: const TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w500,
                       height: 1.1,
                     ),
                   ),
-                  leading: CircleAvatar(
-                    radius: 22,
-                    backgroundImage:
-                        (user.image != null && user.image!.isNotEmpty)
-                        ? NetworkImage(user.image!)
-                        : null,
-                    child: (user.image == null || user.image!.isEmpty)
-                        ? const Icon(Icons.person, size: 30)
-                        : null,
-                  ),
+                  leading: Obx(
+                          () {
+                        ImageProvider<Object>? backgroundImage;
+                        Widget? child;
+
+                        if (_controller.imagePath.value.isNotEmpty) {
+                          backgroundImage =
+                              FileImage(File(_controller.imagePath.value));
+                        }
+                        else if (userInfo.image != null &&
+                            userInfo.image!.isNotEmpty) {
+                          backgroundImage = NetworkImage("${ApiConstant.baseUrl}"
+                              "${userInfo.image!}",);
+                        }
+                        else {
+                          child = const Icon(Icons.person, size: 30);
+                        }
+
+                        return CircleAvatar(
+                          radius: 22,
+                          backgroundImage: backgroundImage,
+                          child: child,
+                        );
+                      }),
                 );
               }),
             ),
@@ -163,92 +178,7 @@ class _MainPageState extends State<MainPage> {
             Spacer(),
             ListTile(
               onTap: () {
-                Get.bottomSheet(
-                  Container(
-                    height: 300,
-                    padding: EdgeInsets.fromLTRB(20, 8, 20, 44),
-                    decoration: BoxDecoration(
-                      border: BoxBorder.all(color: Color(0xffE0E0E0), width: 1),
-                      color: Color(0xffFFFFFF),
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20),
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/drawer_icon/bottom_sheed_icon.svg',
-                        ),
-                        SizedBox(height: 18),
-                        Text(
-                          'Logout',
-                          style: TextStyle(
-                            color: Color(0xffE25252),
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 32),
-                        Text(
-                          'Are you sure you want to log out?',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                            color: Color(0xff6B7280),
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(double.infinity, 55),
-                                  backgroundColor: Color(0xffF6F2FF),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadiusGeometry.circular(
-                                      10,
-                                    ),
-                                    side: BorderSide(
-                                      color: AppColor.primaryColor,
-                                      width: 1,
-                                    ),
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  await PrefsHelper.remove(
-                                    AppConstants.bearerToken,
-                                  );
-                                  Get.offAllNamed(RoutePages.loginScreen);
-                                },
-                                child: Text(
-                                  'Yes, Logout',
-                                  style: TextStyle(
-                                    color: AppColor.primaryColor,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 17,
-                                    height: 1.1,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: CustomElevationButton(
-                                label: 'Cancel',
-                                onPress: () {
-                                  Get.back();
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
+                customBottomSheet();
               },
               title: Text(
                 'Logout ',
@@ -311,5 +241,94 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
     );
+  }
+
+  Future<dynamic> customBottomSheet() {
+    return Get.bottomSheet(
+                Container(
+                  height: 300,
+                  padding: EdgeInsets.fromLTRB(20, 8, 20, 44),
+                  decoration: BoxDecoration(
+                    border: BoxBorder.all(color: Color(0xffE0E0E0), width: 1),
+                    color: Color(0xffFFFFFF),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/drawer_icon/bottom_sheed_icon.svg',
+                      ),
+                      SizedBox(height: 18),
+                      Text(
+                        'Logout',
+                        style: TextStyle(
+                          color: Color(0xffE25252),
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 32),
+                      Text(
+                        'Are you sure you want to log out?',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          color: Color(0xff6B7280),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(double.infinity, 55),
+                                backgroundColor: Color(0xffF6F2FF),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadiusGeometry.circular(
+                                    10,
+                                  ),
+                                  side: BorderSide(
+                                    color: AppColor.primaryColor,
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                              onPressed: () async {
+                                await PrefsHelper.remove(
+                                  AppConstants.bearerToken,
+                                );
+                                Get.offAllNamed(RoutePages.loginScreen);
+                              },
+                              child: Text(
+                                'Yes, Logout',
+                                style: TextStyle(
+                                  color: AppColor.primaryColor,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 17,
+                                  height: 1.1,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: CustomElevationButton(
+                              label: 'Cancel',
+                              onPress: () {
+                                Get.back();
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
   }
 }

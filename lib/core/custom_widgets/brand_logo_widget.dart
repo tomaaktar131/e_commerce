@@ -14,7 +14,8 @@ class BrandLogo extends StatefulWidget {
 }
 
 class _BrandLogoState extends State<BrandLogo> {
-  final _controller = Get.put(HomePageController());
+  final _controller =Get.find<HomePageController>();
+
   @override
   void initState() {
     _controller.fetchBrandsData();

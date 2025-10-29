@@ -14,7 +14,8 @@ class AddNewCard extends StatefulWidget {
 }
 
 class _AddNewCardState extends State<AddNewCard> {
-  final _controller =Get.put(MyCardsController());
+
+  final _controller =Get.find<MyCardsController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -23,7 +23,7 @@ class VerificationCodeScreen extends StatefulWidget {
 }
 
 class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
-  final AuthController _controller = Get.put(AuthController());
+  final  _controller = Get.find<AuthController>();
 
   @override
   void initState() {

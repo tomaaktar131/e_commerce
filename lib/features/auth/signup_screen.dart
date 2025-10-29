@@ -17,7 +17,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  final _authController = Get.put(AuthController());
+  final  _authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

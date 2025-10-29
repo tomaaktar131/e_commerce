@@ -19,7 +19,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  final  _authController = Get.put(AuthController());
+  final  _authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {

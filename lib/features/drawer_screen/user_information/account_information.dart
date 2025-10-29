@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import '../../../../controller/user_info_controller.dart';
+import '../../../Data/service/api_constant.dart';
 
 class AccountInformation extends StatefulWidget {
   const AccountInformation({super.key});
@@ -17,7 +18,7 @@ class AccountInformation extends StatefulWidget {
 }
 
 class _AccountInformationState extends State<AccountInformation> {
-  final _controller = Get.put(UserInfoController());
+  final _controller = Get.find<UserInfoController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,24 +40,31 @@ class _AccountInformationState extends State<AccountInformation> {
           children: [
             Align(
               alignment: Alignment.center,
-              child: Obx(() {
-                final userInfo = _controller.userInfo.value;
-                return CircleAvatar(
-                  radius: 80,
-                  backgroundImage: !_controller.isLoading.value
-                      ? (userInfo?.image != null && userInfo!.image!.isNotEmpty
-                                ? NetworkImage(userInfo.image!)
-                                : null)
-                            as ImageProvider?
-                      : null, // No background image while loading
-                  child:
-                      (_controller.isLoading.value ||
-                          userInfo?.image == null ||
-                          userInfo!.image!.isEmpty)
-                      ? Icon(Icons.person, size: 80, color: AppColor.grayColor)
-                      : null, // No child when image is present
-                );
-              }),
+              child: Obx(
+                      () {
+                        final userInfo = _controller.userInfo.value;
+                    ImageProvider<Object>? backgroundImage;
+                    Widget? child;
+
+                    if (_controller.imagePath.value.isNotEmpty) {
+                      backgroundImage =
+                          FileImage(File(_controller.imagePath.value));
+                    }
+                    else if (userInfo?.image != null &&
+                        userInfo!.image!.isNotEmpty) {
+                      backgroundImage = NetworkImage("${ApiConstant.baseUrl}"
+                          "${userInfo.image!}",);
+                    }
+                    else {
+                      child = const Icon(Icons.person, size: 80);
+                    }
+
+                    return CircleAvatar(
+                      radius: 80,
+                      backgroundImage: backgroundImage,
+                      child: child,
+                    );
+                  }),
             ),
             SizedBox(height: 20),
             Obx(() {
@@ -82,6 +90,8 @@ class _AccountInformationState extends State<AccountInformation> {
             }),
             ElevatedButton(
               onPressed: () {
+                _controller.fetchUserInfoData(updateControllers: true);
+
                 Get.toNamed(RoutePages.editAccountInformation);
               },
 

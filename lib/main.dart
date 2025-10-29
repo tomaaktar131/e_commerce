@@ -2,7 +2,11 @@ import 'package:e_commerce_project/routes/route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'controller/auth_controller.dart';
+import 'controller/cart_controller.dart';
+import 'controller/home_page_controller.dart';
 import 'controller/main_page_controller.dart';
+import 'controller/my_cards_controller.dart';
 import 'controller/user_info_controller.dart';
 
 void main() async{
@@ -12,6 +16,10 @@ void main() async{
   await userInfoController.fetchUserInfoData(); // wait until user info loaded ✅
 
   Get.put(MainPageController());
+  Get.put(MyCardsController());
+  Get.put(HomePageController());
+  Get.put(CartController());
+  Get.put(AuthController());
 
   runApp(const MyApp());
 }

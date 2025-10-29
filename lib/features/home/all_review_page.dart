@@ -7,7 +7,8 @@ import '../../routes/route.dart';
 class AllReviewPage extends StatelessWidget {
    AllReviewPage({super.key});
 
-  final _controller = Get.put(HomePageController());
+   final _controller =Get.find<HomePageController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

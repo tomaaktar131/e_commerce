@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:e_commerce_project/Data/service/api_constant.dart';
 import 'package:e_commerce_project/core/theme/app_colors.dart';
 import 'package:e_commerce_project/routes/route.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class EditAccountInformation extends StatefulWidget {
 }
 
 class _EditAccountInformationState extends State<EditAccountInformation> {
-  final _controller = Get.put(UserInfoController());
+  final _controller = Get.find<UserInfoController>();
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -45,21 +46,29 @@ class _EditAccountInformationState extends State<EditAccountInformation> {
                 child: Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    Obx(
-                      () => CircleAvatar(
-                        radius: 80,
-                        backgroundImage: !_controller.isLoading.value
-                            ? (userInfo?.image != null && userInfo!.image!.isNotEmpty
-                            ? NetworkImage(userInfo.image!)
-                            : null)
-                            : null,
-                        child: !_controller.isLoading.value &&
-                            (userInfo?.image != null && userInfo!.image!.isNotEmpty)
-                            ? null
-                            : const Icon(Icons.person, size: 80),
-                      ),
+                    Obx(() {
+                      ImageProvider<Object>? backgroundImage;
+                      Widget? child;
+                      if (_controller.imagePath.value.isNotEmpty) {
+                        backgroundImage = FileImage(
+                          File(_controller.imagePath.value),
+                        );
+                      } else if (userInfo?.image != null &&
+                          userInfo!.image!.isNotEmpty) {
+                        backgroundImage = NetworkImage(
+                          "${ApiConstant.baseUrl}"
+                          "${userInfo.image!}",
+                        );
+                      } else {
+                        child = const Icon(Icons.person, size: 80);
+                      }
 
-                    ),
+                      return CircleAvatar(
+                        radius: 80,
+                        backgroundImage: backgroundImage,
+                        child: child,
+                      );
+                    }),
                     Positioned(
                       bottom: -16,
                       left: 0,
@@ -81,20 +90,26 @@ class _EditAccountInformationState extends State<EditAccountInformation> {
                   ],
                 ),
               ),
-              _inputField('Name ', _controller.nameCtrl),
-              _inputField('Email ', _controller.emailCtrl),
-              _inputField('Phone Number ', _controller.phoneCtrl),
+              _inputField('Name ', _controller.nameCtrl, false),
+              _inputField('Email ', _controller.emailCtrl, true),
+              _inputField('Phone Number ', _controller.phoneCtrl, false),
               Row(
                 children: [
                   Expanded(
-                    child: _inputField('Country ', _controller.countryCtrl),
+                    child: _inputField(
+                      'Country ',
+                      _controller.countryCtrl,
+                      false,
+                    ),
                   ),
                   SizedBox(width: 15),
-                  Expanded(child: _inputField('City ', _controller.cityCtrl)),
+                  Expanded(
+                    child: _inputField('City ', _controller.cityCtrl, false),
+                  ),
                 ],
               ),
 
-              _inputField('Address ', _controller.addressCtrl),
+              _inputField('Address ', _controller.addressCtrl, false),
 
               SizedBox(height: 26),
               CustomElevationButton(
@@ -103,11 +118,13 @@ class _EditAccountInformationState extends State<EditAccountInformation> {
                   if (_formKey.currentState!.validate()) {
                     _controller.updateUserInfo(
                       firstName: _controller.nameCtrl.text,
-                      email: _controller.emailCtrl.text,
                       phone: _controller.phoneCtrl.text,
                       country: _controller.countryCtrl.text,
                       city: _controller.cityCtrl.text,
                       address: _controller.addressCtrl.text,
+                      imageFile: _controller.imagePath.value.isNotEmpty
+                          ? File(_controller.imagePath.value)
+                          : null,
                     );
                   }
                 },
@@ -119,7 +136,11 @@ class _EditAccountInformationState extends State<EditAccountInformation> {
     );
   }
 
-  Widget _inputField(String label, TextEditingController controller) {
+  Widget _inputField(
+    String label,
+    TextEditingController controller,
+    bool isReadOnly,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
@@ -136,6 +157,7 @@ class _EditAccountInformationState extends State<EditAccountInformation> {
           ),
           SizedBox(height: 10),
           TextFormField(
+            readOnly: isReadOnly,
             controller: controller,
             style: TextStyle(
               fontWeight: FontWeight.w400,

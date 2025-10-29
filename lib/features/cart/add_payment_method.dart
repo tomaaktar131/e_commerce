@@ -16,7 +16,8 @@ class AddPaymentMethod extends StatefulWidget {
 }
 
 class _AddPaymentMethodState extends State<AddPaymentMethod> {
-final _controller =Get.put(MyCardsController());
+  final _controller =Get.find<MyCardsController>();
+
 
   @override
   Widget build(BuildContext context) {
