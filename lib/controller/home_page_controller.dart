@@ -1,21 +1,28 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../Data/helpers/prefs_helper.dart';
 import '../Data/model/brand_view_model.dart';
 import '../Data/model/product_model.dart';
+import '../Data/model/product_review_model.dart';
 import '../Data/service/api_checker.dart';
 import '../Data/service/api_clint.dart';
 import '../Data/service/api_constant.dart';
+import '../Data/utils/app_constants.dart';
+import '../routes/route.dart';
 
 class HomePageController extends GetxController {
   var isLoading = false.obs;
 
   ///<========= Product Details page ==============> ///
-
+  RxBool selected = false.obs;
+  RxString selectedSize = ''.obs;
   RxInt selectedIndex = 0.obs;
 
 
-  Rx<int> selectedSizeIndex = (-1).obs;
+/*  Rx<int> selectedSizeIndex = (-1).obs;
   RxString selectedSize = ''.obs;
 
   void selectSize(int index, ProductData product) {
@@ -27,7 +34,7 @@ class HomePageController extends GetxController {
   RxMap<String, dynamic> selectedProduct = <String, dynamic>{}.obs;
   setSelectedProduct(Map<String, dynamic> product) {
     selectedProduct.value = product;
-  }
+  }*/
 
   RxBool isExpanded = false.obs;
 
@@ -76,62 +83,102 @@ class HomePageController extends GetxController {
     isLoading(false);}
 
     ///<================review page =================>///
-    final RxList<Map<String, dynamic>> reviews = <Map<String, dynamic>>[
-      {
-        "name": "Jenny Wilson",
-        "date": "13 Sep, 2020",
-        "rating": 5,
-        "review":
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...",
-        "image": "assets/images/person_1.png",
-      },
-      {
-        "name": "Jenny Wilson",
-        "date": "13 Sep, 2020",
-        "rating": 3.5,
-        "review":
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...",
-        "image": "assets/images/person_2.png",
-      },
-      {
-        "name": "Jenny Wilson",
-        "date": "13 Sep, 2020",
-        "rating": 5,
-        "review":
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...",
-        "image": "assets/images/person_3.png",
-      },
-      {
-        "name": "Jenny Wilson",
-        "date": "13 Sep, 2020",
-        "rating": 4.8,
-        "review":
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...",
-        "image": "assets/images/person_1.png",
-      },
-      {
-        "name": "Jenny Wilson",
-        "date": "13 Sep, 2020",
-        "rating": 4.8,
-        "review":
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...",
-        "image": "assets/images/person_2.png",
-      },
-    ].obs;
+    // final RxList<Map<String, dynamic>> reviews = <Map<String, dynamic>>[
+    //   {
+    //     "name": "Jenny Wilson",
+    //     "date": "13 Sep, 2020",
+    //     "rating": 5,
+    //     "review":
+    //         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...",
+    //     "image": "assets/images/person_1.png",
+    //   },
+    //   {
+    //     "name": "Jenny Wilson",
+    //     "date": "13 Sep, 2020",
+    //     "rating": 3.5,
+    //     "review":
+    //         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...",
+    //     "image": "assets/images/person_2.png",
+    //   },
+    //   {
+    //     "name": "Jenny Wilson",
+    //     "date": "13 Sep, 2020",
+    //     "rating": 5,
+    //     "review":
+    //         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...",
+    //     "image": "assets/images/person_3.png",
+    //   },
+    //   {
+    //     "name": "Jenny Wilson",
+    //     "date": "13 Sep, 2020",
+    //     "rating": 4.8,
+    //     "review":
+    //         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...",
+    //     "image": "assets/images/person_1.png",
+    //   },
+    //   {
+    //     "name": "Jenny Wilson",
+    //     "date": "13 Sep, 2020",
+    //     "rating": 4.8,
+    //     "review":
+    //         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...",
+    //     "image": "assets/images/person_2.png",
+    //   },
+    // ].obs;
     averageRating() {
       if (reviews.isEmpty) {
         return 0.0;
       }
       final sum = reviews
-          .map((r) => r['rating'] as num)
+          .map((r) => r.rating as num)
           .reduce((a, b) => a + b);
       final average = sum / reviews.length;
       return double.parse(average.toStringAsFixed(1));
     }
+    //====================
+
+  RxList<ReviewModel> reviews = RxList<ReviewModel>();
+  Future<void> fetchReviewData(int productId) async {
+    isLoading(true);
+
+    final response = await ApiClient.getData(ApiConstant.productReviewDataEndPoint(productId));
+    if (response.statusCode == 200) {
+      List<dynamic> data = response.body['reviews'];
+      reviews.value = data.map((e) => ReviewModel.fromJson(e)).toList();
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    isLoading(false);
+  }
+
 
     ///<================Add review page =================>///
     final TextEditingController nameController = TextEditingController();
     final TextEditingController experienceController = TextEditingController();
     RxDouble rating = 2.5.obs;
+
+
+  addReview(firstName, comment, rating,productId) async {
+    isLoading(true);
+    var headers = {'Content-Type': 'application/json'};
+    var response = await ApiClient.postData(
+      ApiConstant.productReviewDataEndPoint(productId),
+      jsonEncode({
+        "first_name": firstName,
+        "rating": rating,
+        "comment": comment,
+      }),
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      Get.back();
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    isLoading(false);
+  }
+
+
+
 
 }

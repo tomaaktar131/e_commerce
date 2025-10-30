@@ -127,6 +127,7 @@ class _EditAccountInformationState extends State<EditAccountInformation> {
                           : null,
                     );
                   }
+                  Get.back();
                 },
               ),
             ],

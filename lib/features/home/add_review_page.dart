@@ -20,6 +20,7 @@ class _AddReviewPageState extends State<AddReviewPage> {
 
   @override
   Widget build(BuildContext context) {
+    final productId= Get.arguments;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -184,7 +185,7 @@ class _AddReviewPageState extends State<AddReviewPage> {
               //  Submit Button
             CustomElevationButton(label: 'Submit Review', onPress: () {
               if(_fromKey.currentState!.validate()){
-                Get.offNamed(RoutePages.allReviewPage);
+                _controller.addReview(_controller.nameController.text, _controller.experienceController.text, _controller.rating.value, productId);
               }
             },),
             ],

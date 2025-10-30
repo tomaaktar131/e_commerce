@@ -18,11 +18,19 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+  late final ProductData product;
   final _controller = Get.find<HomePageController>();
   @override
+  void initState() {
+    product = Get.arguments;
+    _controller.fetchReviewData(product.id);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final ProductData product = Get.arguments;
     final controller = Get.find<HomePageController>();
+    final reviews = controller.reviews.value;
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -37,8 +45,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                       height: MediaQuery.of(context).size.height * 0.45,
                       child: Obx(
                         () => ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: (product.images.isNotEmpty &&
+                          borderRadius: BorderRadius.circular(0),
+                          child:
+                              (product.images.isNotEmpty &&
                                   _controller.selectedIndex.value <
                                       product.images.length)
                               ? Image.network(
@@ -46,18 +55,18 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) =>
                                       Image.asset(
-                                    'assets/images/no-image-available.jpg',
-                                    fit: BoxFit.cover,
-                                  ),
+                                        'assets/images/no-image-available.jpg',
+                                        fit: BoxFit.cover,
+                                      ),
                                 )
                               : Image.asset(
-                              'assets/images/no-image-available.jpg',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                                  'assets/images/no-image-available.jpg',
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                       ),
                     ),
+                  ),
 
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
@@ -124,11 +133,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                             scrollDirection: Axis.horizontal,
                             itemCount: product.images.length,
                             itemBuilder: (context, index) {
-                              final imageUrl = "${ApiConstant.baseUrl}${product.images[index]}";
-                              return InkWell(onTap: () {
-                                  _controller.selectedIndex.value= index;
-
-                              },
+                              final imageUrl =
+                                  "${ApiConstant.baseUrl}${product.images[index]}";
+                              return InkWell(
+                                onTap: () {
+                                  _controller.selectedIndex.value = index;
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.only(right: 8.0),
                                   child: ClipRRect(
@@ -138,12 +148,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       width: 77,
                                       height: 77,
                                       fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) => Image.asset(
-                                        'assets/images/no-image-available.jpg',
-                                        width: 77,
-                                        height: 77,
-                                        fit: BoxFit.cover,
-                                      ),
+                                      errorBuilder:
+                                          (
+                                            context,
+                                            error,
+                                            stackTrace,
+                                          ) => Image.asset(
+                                            'assets/images/no-image-available.jpg',
+                                            width: 77,
+                                            height: 77,
+                                            fit: BoxFit.cover,
+                                          ),
                                     ),
                                   ),
                                 ),
@@ -180,7 +195,41 @@ class _ProductDetailsState extends State<ProductDetails> {
                         const SizedBox(height: 10),
                         SizedBox(
                           height: 60,
-                          child: ListView.separated(
+                          child: Obx(
+                            () => InkWell(
+                              onTap: () {
+                                _controller.selected.value =
+                                    !_controller.selected.value;
+                                _controller.selectedSize.value = product.sizes!;
+                              },
+                              child: Container(
+                                height: 60,
+                                width: 60,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xffF5F6FA),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: _controller.selected.value == true
+                                      ? Border.all(
+                                          color: AppColor.primaryColor,
+                                          width: 1,
+                                        )
+                                      : null,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    product.sizes!,
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w600,
+                                      height: 1.1,
+                                      color: Color(0xff1D1E20),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          /*   child: ListView.separated(
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
                                 onTap: () {
@@ -223,7 +272,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 (BuildContext context, int index) =>
                                     const SizedBox(width: 9),
                             itemCount: product.sizes!.length,
-                          ),
+                          ),*/
                         ),
                         const SizedBox(height: 20),
                         Align(
@@ -243,7 +292,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                         Obx(() {
                           final description = product.description ?? '';
                           final isLongText = description.length > 120;
-                          final displayText = controller.isExpanded.value || !isLongText
+                          final displayText =
+                              controller.isExpanded.value || !isLongText
                               ? description
                               : '${description.substring(0, 120)}... ';
 
@@ -258,14 +308,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 TextSpan(text: displayText),
                                 if (isLongText)
                                   TextSpan(
-                                    text: controller.isExpanded.value ? ' Read Less' : ' Read More',
+                                    text: controller.isExpanded.value
+                                        ? ' Read Less'
+                                        : ' Read More',
                                     style: const TextStyle(
                                       color: Color(0xff1D1E20),
                                       fontWeight: FontWeight.w600,
                                     ),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        controller.isExpanded.value = !controller.isExpanded.value;
+                                        controller.isExpanded.value =
+                                            !controller.isExpanded.value;
                                       },
                                   ),
                               ],
@@ -288,7 +341,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Get.toNamed(RoutePages.allReviewPage);
+                                Get.toNamed(
+                                  RoutePages.allReviewPage,
+                                  arguments: [reviews,product.id]
+                                );
                               },
                               child: Text(
                                 'View All',
@@ -304,127 +360,147 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ),
                         SizedBox(height: 15),
 
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: 1,
-                          itemBuilder: (context, index) {
-                            final review = controller.reviews[index];
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // ======= Row 1: Profile + Name + Rating =======
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Profile image
-                                    CircleAvatar(
-                                      radius: 22,
-                                      backgroundImage: AssetImage(
-                                        review['image'],
+                        Obx(() {
+                          if (_controller.reviews.value.isEmpty) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20.0),
+                                child: Text(
+                                  'There are no reviews yet.',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: reviews.isNotEmpty
+                                ? 1
+                                : 0, // Show only the first review if available
+                            itemBuilder: (context, index) {
+                              final review = reviews[index];
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // ======= Row 1: Profile + Name + Rating =======
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Profile image
+                                      CircleAvatar(
+                                        radius: 22,
+                                        backgroundImage: NetworkImage(
+                                          "${ApiConstant.baseUrl}${review.user.image ?? ''}",
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    // Name + Date
-                                    Expanded(
-                                      child: Column(
+                                      const SizedBox(width: 10),
+                                      // Name + Date
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              review.user.firstName,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                color: Color(0xff1D1E20),
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 7),
+                                            Row(
+                                              children: [
+                                                SvgPicture.asset(
+                                                  'assets/icons/time_icon.svg',
+                                                  fit: BoxFit.scaleDown,
+                                                ),
+                                                const SizedBox(width: 5),
+                                                Text(
+                                                  review.createdAt,
+                                                  style: const TextStyle(
+                                                    fontSize: 11,
+                                                    color: Colors.grey,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      // Rating section
+                                      Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.end,
                                         children: [
-                                          Text(
-                                            '${review['name']}',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff1D1E20),
-                                              fontSize: 15,
+                                          RichText(
+                                            text: TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                  text: '${review.rating}',
+                                                  style: const TextStyle(
+                                                    color: Color(0xff1D1E20),
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                                const TextSpan(
+                                                  text: " rating",
+                                                  style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          const SizedBox(height: 7),
+                                          const SizedBox(height: 5),
                                           Row(
-                                            children: [
-                                              SvgPicture.asset(
-                                                'assets/icons/time_icon.svg',
-                                                fit: BoxFit.scaleDown,
-                                              ),
-                                              const SizedBox(width: 5),
-                                              Text(
-                                                '${review['date']}',
-                                                style: const TextStyle(
-                                                  fontSize: 11,
-                                                  color: Colors.grey,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ],
+                                            children: List.generate(5, (
+                                              starIndex,
+                                            ) {
+                                              double rating =
+                                                  (review.rating as num)
+                                                      .toDouble();
+                                              return Icon(
+                                                starIndex < rating.floor()
+                                                    ? Icons.star
+                                                    : (starIndex < rating
+                                                          ? Icons.star_half
+                                                          : Icons.star_border),
+                                                color: Colors.orange.shade400,
+                                                size: 15,
+                                              );
+                                            }),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    // Rating section
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: '${review['rating']}',
-                                                style: const TextStyle(
-                                                  color: Color(0xff1D1E20),
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                              const TextSpan(
-                                                text: " rating",
-                                                style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 11,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Row(
-                                          children: List.generate(5, (
-                                            starIndex,
-                                          ) {
-                                            double rating =
-                                                (review['rating'] as num)
-                                                    .toDouble();
-                                            return Icon(
-                                              starIndex < rating.floor()
-                                                  ? Icons.star
-                                                  : (starIndex < rating
-                                                        ? Icons.star_half
-                                                        : Icons.star_border),
-                                              color: Colors.orange.shade400,
-                                              size: 15,
-                                            );
-                                          }),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 12),
-
-                                /// ======= Review Text =======
-                                Text(
-                                  '${review['review']}',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
-                                    height: 1.4,
+                                    ],
                                   ),
-                                ),
-                                SizedBox(height: 20),
-                              ],
-                            );
-                          },
-                        ),
+                                  const SizedBox(height: 12),
+
+                                  /// ======= Review Text =======
+                                  Text(
+                                    review.comment,
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
+                              );
+                            },
+                          );
+                        }),
                       ],
                     ),
                   ),
@@ -475,8 +551,8 @@ class _ProductDetailsState extends State<ProductDetails> {
 
       bottomNavigationBar: Container(
         height: 155,
-        padding: EdgeInsets.fromLTRB(20, 10, 20, 25),
-        decoration: BoxDecoration(
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 25),
+        decoration: const BoxDecoration(
           color: Color(0xffFEFEFE),
           boxShadow: [
             BoxShadow(
@@ -491,7 +567,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           children: [
             Row(
               children: [
-                Column(
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -514,7 +590,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     ),
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
                 Column(
                   children: [
                     Text(
@@ -529,7 +605,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             CustomElevationButton(
               label: 'Add to Cart ',

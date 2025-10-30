@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../../controller/setting_controller.dart';
 
 class AboutUs extends StatelessWidget {
-  const AboutUs({super.key});
+   AboutUs({super.key});
+  final settingController = Get.find<SettingController>();
 
   @override
   Widget build(BuildContext context) {
@@ -17,103 +21,49 @@ class AboutUs extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '1. Introduction',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-                color: Color(0xff1F2937),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Elit ac gravida augue suspendisse in scelerisque pellentesque diam elementum. Lorem quam vitae mus metus tortor turpis at. Cras accumsan pharetra odio euismod metus leo neque duis.',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff4B5563),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              '2. Mission Statement',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-                color: Color(0xff1F2937),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Elit ac gravida augue suspendisse in scelerisque pellentesque diam elementum. Lorem quam vitae mus metus tortor turpis at. Cras accumsan pharetra odio euismod metus leo neque duis.',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff4B5563),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              '3. Core Values',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-                color: Color(0xff1F2937),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Elit ac gravida augue suspendisse in scelerisque pellentesque diam elementum. Lorem quam vitae mus metus tortor turpis at. Cras accumsan pharetra odio euismod metus leo neque duis.',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff4B5563),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              '4. Our Team',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-                color: Color(0xff1F2937),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Elit ac gravida augue suspendisse in scelerisque pellentesque diam elementum. Lorem quam vitae mus metus tortor turpis at. Cras accumsan pharetra odio euismod metus leo neque duis.',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff4B5563),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              '5. Contact Information',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-                color: Color(0xff1F2937),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Elit ac gravida augue suspendisse in scelerisque pellentesque diam elementum. Lorem quam vitae mus metus tortor turpis at. Cras accumsan pharetra odio euismod metus leo neque duis.',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff4B5563),
-              ),
-            ),
-            SizedBox(height: 16),
-
-          ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Obx(() {
+                if (settingController.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: settingController.aboutUsData.length,
+                  itemBuilder: (context, index) {
+                    final item = settingController.aboutUsData[index];
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.heading,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            color: Color(0xff1F2937),
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          item.description,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xff4B5563),
+                          ),
+                        ),
+                        SizedBox(height: 16),                    ],
+                    );
+                  },
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );

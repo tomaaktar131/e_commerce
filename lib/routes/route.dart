@@ -125,8 +125,8 @@ final getPages = [
   GetPage(name: RoutePages.viewAllProduct, page: () => ViewAllProduct()),
   GetPage(name: RoutePages.viewAllBrands, page: () => ViewAllBrands()),
    GetPage(name: RoutePages.chooseBrandPage, page: () => ChooseBrandPage()),
-  GetPage(name: RoutePages.allReviewPage, page: () => AllReviewPage()),
-  GetPage(name: RoutePages.addReviewPage, page: () => AddReviewPage()),
+   GetPage(name: RoutePages.allReviewPage, page: () => AllReviewPage()),
+   GetPage(name: RoutePages.addReviewPage, page: () => AddReviewPage()),
   GetPage(name: RoutePages.orderConfirmed, page: () => OrderConfirmed()),
   GetPage(
     name: RoutePages.addDeliveryAddress,

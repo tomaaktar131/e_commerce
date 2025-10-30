@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../controller/setting_controller.dart';
 
 class TermsOfServices extends StatelessWidget {
-  const TermsOfServices({super.key});
-
+  TermsOfServices({super.key});
+  final settingController = Get.find<SettingController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,103 +19,49 @@ class TermsOfServices extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '1. Introduction',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-                color: Color(0xff1F2937),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Elit ac gravida augue suspendisse in scelerisque pellentesque diam elementum. Lorem quam vitae mus metus tortor turpis at. Cras accumsan pharetra odio euismod metus leo neque duis.',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff4B5563),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              '2. User Responsibilities',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-                color: Color(0xff1F2937),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Elit ac gravida augue suspendisse in scelerisque pellentesque diam elementum. Lorem quam vitae mus metus tortor turpis at. Cras accumsan pharetra odio euismod metus leo neque duis.',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff4B5563),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              '3. Privacy and Data Collection',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-                color: Color(0xff1F2937),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Elit ac gravida augue suspendisse in scelerisque pellentesque diam elementum. Lorem quam vitae mus metus tortor turpis at. Cras accumsan pharetra odio euismod metus leo neque duis.',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff4B5563),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              '4. User Content',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-                color: Color(0xff1F2937),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Elit ac gravida augue suspendisse in scelerisque pellentesque diam elementum. Lorem quam vitae mus metus tortor turpis at. Cras accumsan pharetra odio euismod metus leo neque duis.',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff4B5563),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              '5. Subscription and Payment',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-                color: Color(0xff1F2937),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Elit ac gravida augue suspendisse in scelerisque pellentesque diam elementum. Lorem quam vitae mus metus tortor turpis at. Cras accumsan pharetra odio euismod metus leo neque duis.',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff4B5563),
-              ),
-            ),
-            SizedBox(height: 16),
-
-          ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Obx(() {
+                if (settingController.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: settingController.termsData.length,
+                  itemBuilder: (context, index) {
+                    final item = settingController.termsData[index];
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.heading,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            color: Color(0xff1F2937),
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          item.description,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xff4B5563),
+                          ),
+                        ),
+                        SizedBox(height: 16),                    ],
+                    );
+                  },
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );

@@ -7,7 +7,9 @@ import 'controller/cart_controller.dart';
 import 'controller/home_page_controller.dart';
 import 'controller/main_page_controller.dart';
 import 'controller/my_cards_controller.dart';
+import 'controller/setting_controller.dart';
 import 'controller/user_info_controller.dart';
+import 'controller/wish_list_controler.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +22,8 @@ void main() async{
   Get.put(HomePageController());
   Get.put(CartController());
   Get.put(AuthController());
+  Get.put(WishlistController());
+  Get.put(SettingController());
 
   runApp(const MyApp());
 }

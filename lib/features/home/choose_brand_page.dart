@@ -38,7 +38,7 @@ class _ChooseBrandPageState extends State<ChooseBrandPage> {
           ),
           child: Image.network(
             "${ApiConstant.baseUrl}"
-            "${brandLogo}",
+            "$brandLogo",
             errorBuilder: (context, error, stackTrace) {
               return Image.asset(
                 'assets/images/no-image-available.jpg',

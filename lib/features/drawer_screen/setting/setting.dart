@@ -4,9 +4,28 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-class Setting extends StatelessWidget {
+import '../../../controller/setting_controller.dart';
+
+class Setting extends StatefulWidget {
   const Setting({super.key});
 
+  @override
+  State<Setting> createState() => _SettingState();
+}
+
+class _SettingState extends State<Setting> {
+  final _controller= Get.find<SettingController>();
+  @override
+  void initState() {
+
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.getPrivacyPolicyData();
+      _controller.getAboutUsData();
+      _controller.getTermsAndServicesData();
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

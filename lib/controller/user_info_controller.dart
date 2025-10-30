@@ -114,7 +114,7 @@ class UserInfoController extends GetxController {
       if (response.statusCode == 200) {
         Get.snackbar("Success", "Profile updated successfully!");
         await fetchUserInfoData();
-        Get.toNamed(RoutePages.mainPage); // Update view data
+       // Get.toNamed(RoutePages.mainPage); // Update view data
       } else {
         ApiChecker.checkApi(response);
       }

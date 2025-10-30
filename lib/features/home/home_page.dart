@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../Data/model/product_model.dart';
 import '../../controller/home_page_controller.dart';
+import '../../controller/wish_list_controler.dart';
 import '../../core/custom_widgets/brand_logo_widget.dart';
 import '../../core/theme/app_colors.dart';
 import '../../routes/route.dart';
@@ -22,10 +23,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState(){
     _controller.fetchProductData();
+    _wishlistController.loadProductWisherList(8);
     super.initState();
   }
 
   final _controller = Get.find<HomePageController>();
+  final _wishlistController = Get.find<WishlistController>();
 
   @override
   Widget build(BuildContext context) {
@@ -116,16 +119,22 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: AppColor.primaryColor,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: SvgPicture.asset(
-                          'assets/icons/mice_icon_home.svg',
-                          fit: BoxFit.scaleDown,
+                      InkWell(
+                        onTap: (){
+                          _wishlistController.loadProductWisherList(8);
+                          _wishlistController.toggleWishlist(8);
+                        },
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: AppColor.primaryColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: SvgPicture.asset(
+                            'assets/icons/mice_icon_home.svg',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
                     ],
