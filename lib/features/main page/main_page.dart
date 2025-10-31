@@ -58,56 +58,53 @@ class _MainPageState extends State<MainPage> {
               child: Obx(() {
                 final userInfo = _controller.userInfo.value;
 
-                // if (_controller.isLoading.value) {
-                //   return const Center(child: CircularProgressIndicator());
-                // }
-                //
-                // if (userInfo == null) {
-                //   return const ListTile(
-                //     title: Text("Loading user info..."),
-                //     leading: Icon(Icons.person),
-                //   );
-                // }
+                // যদি এখনো data না আসে
+                if (userInfo == null) {
+                  return const ListTile(
+                    title: Text("Loading user info..."),
+                    leading: Icon(Icons.person),
+                  );
+                }
 
                 return ListTile(
                   onTap: () {
                     Get.toNamed(RoutePages.accountInformation);
                   },
                   title: Text(
-                    userInfo!.firstName,
+                    userInfo.firstName ?? "No Name",
                     style: const TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w500,
                       height: 1.1,
                     ),
                   ),
-                  leading: Obx(
-                          () {
-                        ImageProvider<Object>? backgroundImage;
-                        Widget? child;
+                  leading: Obx(() {
+                    ImageProvider<Object>? backgroundImage;
+                    Widget? child;
 
-                        if (_controller.imagePath.value.isNotEmpty) {
-                          backgroundImage =
-                              FileImage(File(_controller.imagePath.value));
-                        }
-                        else if (userInfo.image != null &&
-                            userInfo.image!.isNotEmpty) {
-                          backgroundImage = NetworkImage("${ApiConstant.baseUrl}"
-                              "${userInfo.image!}",);
-                        }
-                        else {
-                          child = const Icon(Icons.person, size: 30);
-                        }
+                    // যদি local image থাকে (file path)
+                    if (_controller.imagePath.value.isNotEmpty) {
+                      backgroundImage = FileImage(File(_controller.imagePath.value));
+                    }
+                    // যদি server image থাকে
+                    else if (userInfo.image != null && userInfo.image!.isNotEmpty) {
+                      backgroundImage = NetworkImage("${ApiConstant.baseUrl}${userInfo.image!}");
+                    }
+                    // fallback icon
+                    else {
+                      child = const Icon(Icons.person, size: 30);
+                    }
 
-                        return CircleAvatar(
-                          radius: 22,
-                          backgroundImage: backgroundImage,
-                          child: child,
-                        );
-                      }),
+                    return CircleAvatar(
+                      radius: 22,
+                      backgroundImage: backgroundImage,
+                      child: child,
+                    );
+                  }),
                 );
               }),
             ),
+
             ListTile(
               onTap: () {
                 Get.toNamed(RoutePages.accountInformation);
